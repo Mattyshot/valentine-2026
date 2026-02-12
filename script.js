@@ -1,177 +1,199 @@
-let currentSlide = 1;
-
-function nextSlide(to) {
-    // 1. Скрываем текущий слайд (если он существует)
-    const currentId = `slide${currentSlide}`;
-    const currentElem = document.getElementById(currentId);
-    if (currentElem) {
-        currentElem.classList.add('hidden');
-    } else {
-        console.warn(`Не найден текущий слайд: ${currentId}`);
-    }
-
-    // 2. Определяем ID следующего слайда
-    let nextId;
-    if (typeof to === 'number') {
-        nextId = `slide${to}`;
-    } else {
-        nextId = to; // строка, например 'slide-refuse'
-    }
-
-    // 3. Показываем следующий слайд
-    const nextElem = document.getElementById(nextId);
-    if (nextElem) {
-        nextElem.classList.remove('hidden');
-    } else {
-        console.error(`Не найден следующий слайд: ${nextId}`);
-        return;
-    }
-
-    // 4. Обновляем currentSlide ТОЛЬКО если это числовой слайд
-    if (typeof to === 'number') {
-        currentSlide = to;
-    }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-function forceYes() {
-    showJoy('Теперь точно моя валентинка навсегда! 💖💖💖', true);
+body {
+    font-family: 'Cormorant Garamond', serif;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+    color: #fff;
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
 }
 
-function launchConfetti() {
-    confetti({
-        particleCount: 120,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#ff69b4', '#ff1493', '#ffb6c1', '#ffffff', '#ff85c0'],
-        ticks: 300
-    });
-
-    setTimeout(() => {
-        confetti({
-            particleCount: 80,
-            angle: 60,
-            spread: 55,
-            origin: { x: 0 },
-            shapes: ['heart'],
-            colors: ['#ff69b4', '#ff1493']
-        });
-        confetti({
-            particleCount: 80,
-            angle: 120,
-            spread: 55,
-            origin: { x: 1 },
-            shapes: ['heart'],
-            colors: ['#ff69b4', '#ff1493']
-        });
-    }, 400);
+.slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    transition: opacity 1.3s ease;
+    opacity: 0;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const yesBtn = document.getElementById('yesBtn');
-    const noBtn = document.getElementById('noBtn');
-    const responseText = document.getElementById('responseText');
+.slide:not(.hidden) {
+    opacity: 1;
+    z-index: 10;
+}
 
-    // Защита от отсутствия элементов
-    if (!noBtn) {
-        console.error('Кнопка #noBtn не найдена в DOM');
-        return;
-    }
-    if (!yesBtn) {
-        console.error('Кнопка #yesBtn не найдена в DOM');
-        return;
-    }
-    if (!responseText) {
-        console.error('Элемент #responseText не найден в DOM');
-    }
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
 
-    let noHoverCount = 0;
-    const maxHovers = 8;
-    let lastEnterTime = 0;
-    const minInterval = 700;
+.content {
+    text-align: center;
+    width: 100%;
+    max-width: 94%;
+    background: rgba(255, 182, 193, 0.38);
+    backdrop-filter: blur(10px);
+    padding: 24px 16px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.22);
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+}
 
-    // Уворот кнопки «Нет» (работает на ПК и телефоне)
-    noBtn.addEventListener('pointerenter', (e) => {
-        const now = Date.now();
-        if (now - lastEnterTime < minInterval) return;
+/* Заголовки */
+h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(2.4rem, 8vw, 4rem);
+    margin: 0 0 16px 0;
+    line-height: 1.15;
+    text-shadow: 0 4px 16px rgba(255, 20, 147, 0.7);
+}
 
-        if (noHoverCount < maxHovers) {
-            const rect = noBtn.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
+.subtitle {
+    font-size: clamp(1.45rem, 4.8vw, 2rem);
+    line-height: 1.4;
+    margin: 16px 0 28px;
+    padding: 0 8px;
+}
 
-            const clientX = e.clientX;
-            const clientY = e.clientY;
+/* Кнопки */
+.buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
 
-            let dx = centerX - clientX;
-            let dy = centerY - clientY;
+button, .next-btn {
+    font-size: clamp(1.6rem, 4.8vw, 2.1rem);
+    padding: 14px 44px;
+    min-width: 200px;
+    min-height: 54px;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    touch-action: manipulation;
+}
 
-            const len = Math.hypot(dx, dy) || 1;
-            const distance = 140 + Math.random() * 80;
+#yesBtn { background: linear-gradient(45deg, #ff69b4, #ff1493); color: white; }
+#noBtn { background: linear-gradient(45deg, #a0a0a0, #808080); color: white; position: relative; }
 
-            dx = (dx / len) * distance;
-            dy = (dy / len) * distance;
+.next-btn { background: rgba(255,255,255,0.28); border: 2px solid rgba(255,255,255,0.55); }
 
-            dx += (Math.random() - 0.5) * 30;
-            dy += (Math.random() - 0.5) * 30;
+/* Последний слайд — строго без скролла */
+.joy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 16px 0;
+}
 
-            noBtn.style.transition = 'transform 0.9s cubic-bezier(0.25, 0.8, 0.25, 1)';
-            noBtn.style.transform = `translate(${dx}px, ${dy}px) scale(1.03)`;
+.joy h1 {
+    font-size: clamp(2.2rem, 7vw, 3.8rem);
+    margin: 8px 0 16px 0;
+    line-height: 1.2;
+    width: 90%;
+    max-width: 700px;
+}
 
-            noHoverCount++;
-            lastEnterTime = now;
+.photos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: 90%;
+}
 
-            if (noHoverCount >= maxHovers - 3) {
-                noBtn.classList.add('soft-pulse');
-            }
-        }
-    });
+.photos img {
+    width: 100%;
+    max-width: 280px;
+    border-radius: 14px;
+    border: 4px solid rgba(255,255,255,0.4);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+    object-fit: cover;
+}
 
-    noBtn.addEventListener('pointerleave', () => {
-        noBtn.style.transition = 'transform 0.75s ease-out';
-        noBtn.style.transform = 'translate(0, 0) scale(1)';
-    });
+.heart-emoji.beat {
+    font-size: clamp(2.2rem, 8vw, 3.4rem);
+    margin: 16px 0 12px 0;
+}
 
-    // Клик / тап по «Нет» — главный обработчик перехода
-    noBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('Кнопка "Нет" нажата — переходим на slide-refuse');
-        nextSlide('slide-refuse');
-    });
+/* Падающие сердца */
+.hearts {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+    opacity: 0.92;
+}
 
-    // Кнопка «Да»
-    yesBtn.addEventListener('mouseenter', (e) => {
-        for (let i = 0; i < 6; i++) {
-            setTimeout(() => {
-                const heart = document.createElement('span');
-                heart.textContent = '💕';
-                heart.className = 'yes-particle';
-                heart.style.left = e.clientX + 'px';
-                heart.style.top = e.clientY + 'px';
-                document.body.appendChild(heart);
+.hearts::before,
+.hearts::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 200%;
+    background-size: 70px;
+    animation: fall-bg 45s linear infinite;
+}
 
-                setTimeout(() => {
-                    heart.style.transform = `translate(${Math.random()*200-100}px, ${Math.random()*-200-100}px) scale(0)`;
-                    heart.style.opacity = '0';
-                }, 50);
+.hearts::before {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="40" fill="rgba(255,105,180,0.55)">❤️</text></svg>') repeat;
+}
 
-                setTimeout(() => heart.remove(), 1200);
-            }, i * 80);
-        }
-    });
+.hearts::after {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="50" fill="rgba(255,182,193,0.45)">💕</text></svg>') repeat;
+    animation-direction: reverse;
+    animation-duration: 60s;
+    opacity: 0.7;
+}
 
-    yesBtn.addEventListener('click', () => {
-        showJoy('Урааа! Ты моя валентинка навсегда! 💖💖💖', true);
-    });
+@keyframes fall-bg {
+    0% { transform: translateY(-50%); }
+    100% { transform: translateY(100%); }
+}
 
-    const showJoy = (text, isYes = false) => {
-        if (responseText) {
-            responseText.textContent = text;
-        } else {
-            console.error('Элемент #responseText не найден');
-        }
-        nextSlide(3);
-        launchConfetti();
-        if (isYes) setTimeout(launchConfetti, 800);
-    };
-});
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+}
+
+@keyframes softPulse {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(0, -6px) scale(1.06); }
+}
+
+/* Медиа-запросы — строго подгонка под телефон */
+@media (max-width: 600px) {
+    .content { padding: 20px 14px; }
+    h1 { font-size: clamp(2.2rem, 9vw, 3.4rem); margin-bottom: 12px; }
+    .subtitle { font-size: clamp(1.35rem, 4.8vw, 1.85rem); margin: 12px 0 24px; }
+    button { font-size: 1.65rem; padding: 12px 36px; min-width: 170px; }
+    
+    .joy h1 { font-size: clamp(2rem, 8vw, 3.2rem); margin: 8px 0 12px 0; }
+    
+    .photos img { max-width: 78%; }
+    
+    .heart-emoji.beat { font-size: clamp(2rem, 9vw, 3rem); margin: 12px 0 8px 0; }
+}
+
+@media (max-height: 680px) {
+    .content { padding: 16px 12px; }
+    .joy { padding: 12px 0; gap: 12px; }
+    .photos img { max-width: 70%; }
+}
