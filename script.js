@@ -145,4 +145,15 @@ document.addEventListener('DOMContentLoaded', () => {
     noBtn.addEventListener('click', () => {
         nextSlide('refuse');
     });
+
+    // Плавный скролл для фото на десктопе (колёсико мыши)
+    const photosContainer = document.querySelector('.photos-container');
+    if (photosContainer) {
+        photosContainer.addEventListener('wheel', (e) => {
+            if (e.deltaY !== 0) {
+                e.preventDefault();
+                photosContainer.scrollLeft += e.deltaY;
+            }
+        }, { passive: false });
+    }
 });
