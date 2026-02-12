@@ -1,134 +1,92 @@
-let currentSlide = 1;
-
-function nextSlide(to) {
-  const currentElem = document.getElementById("slide" + currentSlide);
-  if (currentElem) currentElem.classList.add("hidden");
-
-  let nextId = (typeof to === "number") ? "slide" + to : to;
-  const nextElem = document.getElementById(nextId);
-  if (nextElem) nextElem.classList.remove("hidden");
-
-  if (typeof to === "number") currentSlide = to;
-}
-
-function launchConfetti() {
-  confetti({
-    particleCount: 120,
-    spread: 70,
-    origin: { y: 0.6 },
-    colors: ["#ff69b4","#ff1493","#ffb6c1","#ffffff","#ff85c0"],
-    ticks: 300
-  });
-
-  setTimeout(function(){
-    confetti({
-      particleCount: 80,
-      angle: 60,
-      spread: 55,
-      origin: { x: 0 },
-      shapes: ["heart"],
-      colors: ["#ff69b4","#ff1493"]
-    });
-    confetti({
-      particleCount: 80,
-      angle: 120,
-      spread: 55,
-      origin: { x: 1 },
-      shapes: ["heart"],
-      colors: ["#ff69b4","#ff1493"]
-    });
-  }, 400);
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  var yesBtn = document.getElementById("yesBtn");
-  var noBtn = document.getElementById("noBtn");
-  var responseText = document.getElementById("responseText");
-  var nextBtn1 = document.getElementById("nextBtn1");
-
-  if (nextBtn1) {
-    nextBtn1.addEventListener("click", function () {
-      nextSlide(2);
-    });
-  }
-
-  if (!noBtn || !yesBtn) return;
-
-  var noHoverCount = 0;
-  var maxHovers = 8;
-  var lastEnterTime = 0;
-  var minInterval = 700;
-
-  noBtn.addEventListener("pointerenter", function (e) {
-    var now = Date.now();
-    if (now - lastEnterTime < minInterval) return;
-
-    if (noHoverCount < maxHovers) {
-      var rect = noBtn.getBoundingClientRect();
-      var centerX = rect.left + rect.width / 2;
-      var centerY = rect.top + rect.height / 2;
-
-      var clientX = e.clientX;
-      var clientY = e.clientY;
-
-      var dx = centerX - clientX;
-      var dy = centerY - clientY;
-
-      var len = Math.hypot(dx, dy) || 1;
-      var distance = 140 + Math.random() * 80;
-
-      dx = (dx / len) * distance;
-      dy = (dy / len) * distance;
-
-      dx += (Math.random() - 0.5) * 30;
-      dy += (Math.random() - 0.5) * 30;
-
-      noBtn.style.transition = "transform 0.9s cubic-bezier(0.25, 0.8, 0.25, 1)";
-      noBtn.style.transform = "translate(" + dx + "px, " + dy + "px) scale(1.03)";
-
-      noHoverCount++;
-      lastEnterTime = now;
-
-      if (noHoverCount >= maxHovers - 3) {
-        noBtn.classList.add("soft-pulse");
-      }
-    }
-  });
-
-  noBtn.addEventListener("pointerleave", function () {
-    noBtn.style.transition = "transform 0.75s ease-out";
-    noBtn.style.transform = "translate(0, 0) scale(1)";
-  });
-
-  noBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-    nextSlide("slide-refuse");
-  });
-
-  yesBtn.addEventListener("mouseenter", function (e) {
-    for (var i = 0; i < 6; i++) {
-      setTimeout(function () {
-        var heart = document.createElement("span");
-        heart.textContent = "💕";
-        heart.className = "yes-particle";
-        heart.style.left = e.clientX + "px";
-        heart.style.top = e.clientY + "px";
-        document.body.appendChild(heart);
-
-        setTimeout(function () {
-          heart.style.transform = "translate(" + (Math.random()*200-100) + "px, " + (Math.random()*-200-100) + "px) scale(0)";
-          heart.style.opacity = "0";
-        }, 50);
-
-        setTimeout(function () { heart.remove(); }, 1200);
-      }, i * 80);
-    }
-  });
-
-  yesBtn.addEventListener("click", function () {
-    if (responseText) responseText.textContent = "Урааа! Ты моя валентинка навсегда! 💖💖💖";
-    nextSlide(3);
-    launchConfetti();
-    setTimeout(launchConfetti, 800);
-  });
+// GSAP вход карточки
+gsap.from(".card", {
+    duration: 1.2,
+    y: 40,
+    opacity: 0,
+    ease: "power3.out"
 });
+
+// Заголовок
+gsap.from("h1", {
+    duration: 1.2,
+    y: 20,
+    opacity: 0,
+    delay: 0.2,
+    ease: "power3.out"
+});
+
+// Кнопки
+gsap.from(["#yesBtn", "#noBtn"], {
+    duration: 0.9,
+    scale: 0.6,
+    opacity: 0,
+    delay: 0.5,
+    stagger: 0.12,
+    ease: "back.out(1.7)"
+});
+
+// Параллакс карточки
+document.addEventListener("mousemove", (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 10;
+    const y = (e.clientY / window.innerHeight - 0.5) * 10;
+    gsap.to(".card", {
+        rotationY: x,
+        rotationX: -y,
+        transformPerspective: 800,
+        duration: 0.4,
+        ease: "power2.out"
+    });
+});
+
+// Уворот кнопки "Нет"
+let dodgeCount = 0;
+
+function moveNoButton() {
+    const padding = 40;
+    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+    const x = padding + Math.random() * maxX;
+    const y = padding + Math.random() * maxY;
+
+    gsap.to(noBtn, {
+        duration: 0.25,
+        x: x - noBtn.getBoundingClientRect().left,
+        y: y - noBtn.getBoundingClientRect().top,
+        ease: "power2.out"
+    });
+}
+
+noBtn.addEventListener("mouseover", () => {
+    if (dodgeCount < 8) {
+        moveNoButton();
+        dodgeCount++;
+    }
+});
+
+// Показ результата
+function showResult(isYes) {
+    const result = document.getElementById("result");
+    const photos = document.getElementById("photos");
+
+    result.innerHTML = isYes
+        ? "Я знал, что ты скажешь <span class='highlight'>ДА</span> ❤️✨"
+        : "Ты думала, что у тебя есть выбор? Его нет 😎<br><span class='highlight'>Теперь ты моя валентинка!!!</span> ❤️";
+
+    result.style.display = "block";
+    photos.style.display = "block";
+
+    gsap.from(result, { duration: 0.7, y: 20, opacity: 0 });
+    gsap.from("#photos img", { duration: 0.7, y: 30, opacity: 0, stagger: 0.15 });
+}
+
+yesBtn.addEventListener("click", () => showResult(true));
+noBtn.addEventListener("click", () => showResult(false));
+
+// Падающие эмодзи
+const emojis = ["❤️", "💖", "💘", "💕", "💞", "💗", "💓"];
+function createEmoji() {
+    const emoji = document.createElement("div");
+    emoji.classList.add("emoji");
+    emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+    emoji
