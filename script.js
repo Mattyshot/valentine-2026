@@ -11,10 +11,6 @@ function nextSlide(to) {
   if (typeof to === "number") currentSlide = to;
 }
 
-function forceYes() {
-  showJoy("Теперь точно моя валентинка навсегда! 💖💖💖", true);
-}
-
 function launchConfetti() {
   confetti({
     particleCount: 120,
@@ -49,10 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var noBtn = document.getElementById("noBtn");
   var responseText = document.getElementById("responseText");
 
-  if (!noBtn || !yesBtn) {
-    console.error("Кнопки не найдены");
-    return;
-  }
+  if (!noBtn || !yesBtn) return;
 
   var noHoverCount = 0;
   var maxHovers = 8;
@@ -102,7 +95,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   noBtn.addEventListener("click", function (e) {
     e.preventDefault();
-    e.stopPropagation();
     nextSlide("slide-refuse");
   });
 
@@ -127,14 +119,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   yesBtn.addEventListener("click", function () {
-    showJoy("Урааа! Ты моя валентинка навсегда! 💖💖💖", true);
-  });
-
-  function showJoy(text, isYes) {
-    if (responseText) responseText.textContent = text;
+    if (responseText) responseText.textContent = "Урааа! Ты моя валентинка навсегда! 💖💖💖";
     nextSlide(3);
     launchConfetti();
-    if (isYes) setTimeout(launchConfetti, 800);
-  }
+    setTimeout(launchConfetti, 800);
+  });
 });
-
