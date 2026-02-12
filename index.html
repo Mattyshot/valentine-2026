@@ -13,9 +13,7 @@
         --bg2: #ee9ca7;
     }
 
-    * {
-        box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
         margin: 0;
@@ -43,6 +41,7 @@
         font-size: 2rem;
         color: #d1005d;
         margin-bottom: 20px;
+        animation: fadeInDown 1s ease;
     }
 
     #enterBtn {
@@ -54,6 +53,7 @@
         color: white;
         cursor: pointer;
         box-shadow: 0 10px 20px rgba(255, 79, 139, 0.5);
+        animation: fadeIn 1.5s ease;
     }
 
     /* ОСНОВНОЙ САЙТ */
@@ -145,21 +145,19 @@
         margin: 0 auto;
     }
 
-    /* Появление фото */
+    /* Фото — улучшенная анимация */
     .photo {
         width: 200px;
         border-radius: 20px;
         margin: 10px;
         opacity: 0;
-        transform: scale(0.7) rotateY(20deg);
+        transform: scale(0.5) rotateY(40deg);
         animation: photoAppear 1.2s forwards ease;
     }
 
     @keyframes photoAppear {
-        to {
-            opacity: 1;
-            transform: scale(1) rotateY(0deg);
-        }
+        0% { opacity: 0; transform: scale(0.5) rotateY(40deg); }
+        100% { opacity: 1; transform: scale(1) rotateY(0deg); }
     }
 
     /* Сердечки */
@@ -210,6 +208,10 @@
         cursor: pointer;
         display: none;
     }
+
+    /* Анимации */
+    @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+    @keyframes fadeInDown { from {opacity:0; transform:translateY(-20px);} to {opacity:1; transform:translateY(0);} }
 </style>
 </head>
 
@@ -223,7 +225,7 @@
 
 <!-- Музыка -->
 <audio id="bgMusic" loop>
-    <source src="https://dl.muzonovs.ru/files/music/2023/11/tri-dnya-dozhdya-progulka.mp3" type="audio/mpeg">
+    <source src="https://zvukipro.com/uploads/files/2023-11/1701106093_tri-dnya-dozhdya-progulka.mp3" type="audio/mpeg">
 </audio>
 
 <button class="audio-btn" id="audioToggle">🔊 Музыка</button>
@@ -266,8 +268,8 @@
         <!-- Слайд 4 -->
         <div class="slide">
             <div class="slide-inner">
-                <h1>Ты думала, что у тебя есть выбор?</h1>
-                <p>Его нет 😎 Теперь ты моя валентинка навсегда!!!</p>
+                <h1>Тебе так просто от меня не избавиться 😎</h1>
+                <p>Поэтому всё равно ты моя валентинка!!! 💘</p>
                 <img src="photo1.jpg" class="photo">
                 <img src="photo2.jpg" class="photo">
             </div>
