@@ -6,26 +6,22 @@ function nextSlide(to) {
     if (currentElem) {
         currentElem.classList.add('hidden');
     } else {
-        console.warn(`Текущий слайд не найден: slide${currentSlide}`);
+        console.warn(`Не найден текущий слайд slide${currentSlide}`);
     }
 
-    // Определяем id следующего слайда
-    let nextId;
-    if (typeof to === 'number') {
-        nextId = `slide${to}`;
-    } else {
-        nextId = to; // например 'slide-refuse'
-    }
+    // Определяем ID следующего слайда
+    let nextId = (typeof to === 'number') ? `slide${to}` : to;
 
-    // Показываем следующий
+    // Показываем следующий слайд
     const nextElem = document.getElementById(nextId);
     if (nextElem) {
         nextElem.classList.remove('hidden');
     } else {
-        console.error(`Следующий слайд не найден: ${nextId}`);
+        console.error(`Не найден слайд с ID: ${nextId}`);
+        return; // прерываем, чтобы не обновлять currentSlide
     }
 
-    // Обновляем currentSlide только если это числовой слайд
+    // Обновляем currentSlide ТОЛЬКО если это числовой слайд
     if (typeof to === 'number') {
         currentSlide = to;
     }
@@ -69,12 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const noBtn = document.getElementById('noBtn');
     const responseText = document.getElementById('responseText');
 
+    // Защита — если элементов нет, не падаем
+    if (!noBtn || !yesBtn) {
+        console.error('Кнопки не найдены в DOM');
+        return;
+    }
+
     let noHoverCount = 0;
     const maxHovers = 8;
     let lastEnterTime = 0;
     const minInterval = 700;
 
-    // Уворот кнопки «Нет» при наведении / касании
+    // Уворот кнопки «Нет»
     noBtn.addEventListener('pointerenter', (e) => {
         const now = Date.now();
         if (now - lastEnterTime < minInterval) return;
@@ -116,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         noBtn.style.transform = 'translate(0, 0) scale(1)';
     });
 
-    // Реакция на клик / тап по «Нет»
+    // Клик / тап по «Нет» → переход на промежуточный слайд
     noBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -151,6 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const showJoy = (text, isYes = false) => {
         if (responseText) {
             responseText.textContent = text;
+        } else {
+            console.error('Элемент responseText не найден');
         }
         nextSlide(3);
         launchConfetti();
