@@ -44,6 +44,13 @@ document.addEventListener("DOMContentLoaded", function () {
   var yesBtn = document.getElementById("yesBtn");
   var noBtn = document.getElementById("noBtn");
   var responseText = document.getElementById("responseText");
+  var nextBtn1 = document.getElementById("nextBtn1");
+
+  if (nextBtn1) {
+    nextBtn1.addEventListener("click", function () {
+      nextSlide(2);
+    });
+  }
 
   if (!noBtn || !yesBtn) return;
 
