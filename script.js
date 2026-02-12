@@ -1,27 +1,33 @@
 let currentSlide = 1;
 
 function nextSlide(to) {
-    // Скрываем текущий слайд
-    const currentElem = document.getElementById(`slide${currentSlide}`);
+    // 1. Скрываем текущий слайд (если он существует)
+    const currentId = `slide${currentSlide}`;
+    const currentElem = document.getElementById(currentId);
     if (currentElem) {
         currentElem.classList.add('hidden');
     } else {
-        console.warn(`Не найден текущий слайд slide${currentSlide}`);
+        console.warn(`Не найден текущий слайд: ${currentId}`);
     }
 
-    // Определяем ID следующего слайда
-    let nextId = (typeof to === 'number') ? `slide${to}` : to;
+    // 2. Определяем ID следующего слайда
+    let nextId;
+    if (typeof to === 'number') {
+        nextId = `slide${to}`;
+    } else {
+        nextId = to; // строка, например 'slide-refuse'
+    }
 
-    // Показываем следующий слайд
+    // 3. Показываем следующий слайд
     const nextElem = document.getElementById(nextId);
     if (nextElem) {
         nextElem.classList.remove('hidden');
     } else {
-        console.error(`Не найден слайд с ID: ${nextId}`);
-        return; // прерываем, чтобы не обновлять currentSlide
+        console.error(`Не найден следующий слайд: ${nextId}`);
+        return;
     }
 
-    // Обновляем currentSlide ТОЛЬКО если это числовой слайд
+    // 4. Обновляем currentSlide ТОЛЬКО если это числовой слайд
     if (typeof to === 'number') {
         currentSlide = to;
     }
@@ -65,10 +71,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const noBtn = document.getElementById('noBtn');
     const responseText = document.getElementById('responseText');
 
-    // Защита — если элементов нет, не падаем
-    if (!noBtn || !yesBtn) {
-        console.error('Кнопки не найдены в DOM');
+    // Защита от отсутствия элементов
+    if (!noBtn) {
+        console.error('Кнопка #noBtn не найдена в DOM');
         return;
+    }
+    if (!yesBtn) {
+        console.error('Кнопка #yesBtn не найдена в DOM');
+        return;
+    }
+    if (!responseText) {
+        console.error('Элемент #responseText не найден в DOM');
     }
 
     let noHoverCount = 0;
@@ -76,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastEnterTime = 0;
     const minInterval = 700;
 
-    // Уворот кнопки «Нет»
+    // Уворот кнопки «Нет» (работает на ПК и телефоне)
     noBtn.addEventListener('pointerenter', (e) => {
         const now = Date.now();
         if (now - lastEnterTime < minInterval) return;
@@ -118,10 +131,11 @@ document.addEventListener('DOMContentLoaded', () => {
         noBtn.style.transform = 'translate(0, 0) scale(1)';
     });
 
-    // Клик / тап по «Нет» → переход на промежуточный слайд
+    // Клик / тап по «Нет» — главный обработчик перехода
     noBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        console.log('Кнопка "Нет" нажата — переходим на slide-refuse');
         nextSlide('slide-refuse');
     });
 
@@ -154,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (responseText) {
             responseText.textContent = text;
         } else {
-            console.error('Элемент responseText не найден');
+            console.error('Элемент #responseText не найден');
         }
         nextSlide(3);
         launchConfetti();
