@@ -37,35 +37,32 @@ body {
 .content {
     text-align: center;
     width: 100%;
-    max-width: 96%;
-    max-height: 92vh;
-    overflow-y: auto;
+    max-width: 94%;
     background: rgba(255, 182, 193, 0.38);
     backdrop-filter: blur(10px);
-    padding: 28px 16px;
+    padding: 24px 16px;
     border-radius: 24px;
     border: 1px solid rgba(255, 255, 255, 0.22);
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.22);
     overflow-wrap: break-word;
     word-break: break-word;
     hyphens: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
-/* Заголовки и подзаголовки */
+/* Заголовки */
 h1 {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
-    font-size: clamp(2.6rem, 8.5vw, 4.2rem);
+    font-size: clamp(2.4rem, 8vw, 4rem);
     margin: 0 0 16px 0;
-    line-height: 1.1;
+    line-height: 1.15;
     text-shadow: 0 4px 16px rgba(255, 20, 147, 0.7);
 }
 
 .subtitle {
-    font-size: clamp(1.5rem, 4.8vw, 2.1rem);
+    font-size: clamp(1.45rem, 4.8vw, 2rem);
     line-height: 1.4;
-    margin: 16px 0 32px;
+    margin: 16px 0 28px;
     padding: 0 8px;
 }
 
@@ -80,8 +77,8 @@ h1 {
 button, .next-btn {
     font-size: clamp(1.6rem, 4.8vw, 2.1rem);
     padding: 14px 44px;
-    min-width: 210px;
-    min-height: 56px;
+    min-width: 200px;
+    min-height: 54px;
     border: none;
     border-radius: 999px;
     cursor: pointer;
@@ -94,54 +91,45 @@ button, .next-btn {
 
 .next-btn { background: rgba(255,255,255,0.28); border: 2px solid rgba(255,255,255,0.55); }
 
-/* Последний слайд (joy) — текст сверху, фото посередине, сердечки снизу */
+/* Последний слайд — строго без скролла */
 .joy {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* контент начинается сверху */
+    justify-content: space-between;
     height: 100%;
-    padding: 20px 0;
-    gap: 20px;
+    padding: 16px 0;
 }
 
 .joy h1 {
-    font-size: clamp(2.4rem, 7.5vw, 4.5rem);
-    margin: 10px 0 20px 0;
-    text-align: center;
+    font-size: clamp(2.2rem, 7vw, 3.8rem);
+    margin: 8px 0 16px 0;
     line-height: 1.2;
     width: 90%;
-    max-width: 800px;
-}
-
-.photos-wrapper {
-    width: 100%;
-    max-width: 92%;
-    margin: 0 auto 20px auto;
+    max-width: 700px;
 }
 
 .photos {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     gap: 16px;
-    padding: 10px 0;
+    width: 100%;
+    max-width: 90%;
 }
 
 .photos img {
     width: 100%;
-    max-width: 320px;
-    border-radius: 16px;
-    border: 5px solid rgba(255,255,255,0.4);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    max-width: 280px;
+    border-radius: 14px;
+    border: 4px solid rgba(255,255,255,0.4);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.3);
     object-fit: cover;
 }
 
 .heart-emoji.beat {
-    font-size: clamp(2.5rem, 8vw, 4rem);
-    margin-top: auto; /* толкает сердечки вниз */
-    margin-bottom: 20px;
-    text-align: center;
+    font-size: clamp(2.2rem, 8vw, 3.4rem);
+    margin: 16px 0 12px 0;
 }
 
 /* Падающие сердца */
@@ -160,8 +148,8 @@ button, .next-btn {
     position: absolute;
     width: 100%;
     height: 200%;
-    background-size: 80px;
-    animation: fall-bg 40s linear infinite;
+    background-size: 70px;
+    animation: fall-bg 45s linear infinite;
 }
 
 .hearts::before {
@@ -171,7 +159,7 @@ button, .next-btn {
 .hearts::after {
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="50" fill="rgba(255,182,193,0.45)">💕</text></svg>') repeat;
     animation-direction: reverse;
-    animation-duration: 55s;
+    animation-duration: 60s;
     opacity: 0.7;
 }
 
@@ -190,37 +178,22 @@ button, .next-btn {
     50% { transform: translate(0, -6px) scale(1.06); }
 }
 
-/* Responsive */
-@media (max-width: 520px) {
-    .content { padding: 24px 14px; }
-    h1 { font-size: clamp(2.3rem, 9vw, 3.6rem); margin-bottom: 12px; }
-    .subtitle { font-size: clamp(1.4rem, 4.8vw, 1.9rem); margin: 12px 0 28px; }
-    button { font-size: 1.7rem; padding: 12px 38px; min-width: 180px; }
+/* Медиа-запросы — строго подгонка под телефон */
+@media (max-width: 600px) {
+    .content { padding: 20px 14px; }
+    h1 { font-size: clamp(2.2rem, 9vw, 3.4rem); margin-bottom: 12px; }
+    .subtitle { font-size: clamp(1.35rem, 4.8vw, 1.85rem); margin: 12px 0 24px; }
+    button { font-size: 1.65rem; padding: 12px 36px; min-width: 170px; }
     
-    .photos {
-        flex-direction: column;
-        align-items: center;
-    }
+    .joy h1 { font-size: clamp(2rem, 8vw, 3.2rem); margin: 8px 0 12px 0; }
     
-    .photos img {
-        max-width: 85%;
-        max-height: 40vh;
-    }
+    .photos img { max-width: 78%; }
     
-    .joy h1 {
-        font-size: clamp(2.1rem, 8vw, 3.4rem);
-        margin: 8px 0 16px 0;
-    }
-    
-    .heart-emoji.beat {
-        font-size: clamp(2.2rem, 9vw, 3.4rem);
-    }
+    .heart-emoji.beat { font-size: clamp(2rem, 9vw, 3rem); margin: 12px 0 8px 0; }
 }
 
-@media (min-width: 768px) {
-    .content { max-width: 80%; padding: 40px 28px; }
-    h1 { font-size: 5rem; }
-    .subtitle { font-size: 2.3rem; }
-    .photos img { max-width: 380px; }
-    .joy h1 { font-size: 4.8rem; }
+@media (max-height: 680px) {
+    .content { padding: 16px 12px; }
+    .joy { padding: 12px 0; gap: 12px; }
+    .photos img { max-width: 70%; }
 }
