@@ -46,74 +46,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let noHoverCount = 0;
     const maxHovers = 8;
-    let isEscaping = false;
     let lastEnterTime = 0;
-    const minIntervalBetweenEscapes = 800;
+    const minInterval = 700; // пауза между уворотами
 
-    // Обработка уворота (мышь + касание)
-    const handlePointerEnter = (e) => {
-        e.preventDefault(); // предотвращаем возможные дефолтные действия
-        
+    // Уворот при наведении / касании
+    noBtn.addEventListener('pointerenter', (e) => {
         const now = Date.now();
-        
-        if (isEscaping || (now - lastEnterTime < minIntervalBetweenEscapes)) {
-            return;
-        }
+        if (now - lastEnterTime < minInterval) return;
 
         if (noHoverCount < maxHovers) {
-            isEscaping = true;
-            lastEnterTime = now;
-
             const rect = noBtn.getBoundingClientRect();
-            const btnCenterX = rect.left + rect.width / 2;
-            const btnCenterY = rect.top + rect.height / 2;
-            
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            
-            let dx = btnCenterX - clientX;
-            let dy = btnCenterY - clientY;
-            
-            const len = Math.sqrt(dx * dx + dy * dy) || 1;
-            
-            const escapeDistance = 140 + Math.random() * 80;
-            
-            dx = (dx / len) * escapeDistance;
-            dy = (dy / len) * escapeDistance;
-            
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const clientX = e.clientX;
+            const clientY = e.clientY;
+
+            let dx = centerX - clientX;
+            let dy = centerY - clientY;
+
+            const len = Math.hypot(dx, dy) || 1;
+            const distance = 140 + Math.random() * 80;
+
+            dx = (dx / len) * distance;
+            dy = (dy / len) * distance;
+
             dx += (Math.random() - 0.5) * 30;
             dy += (Math.random() - 0.5) * 30;
-            
+
             noBtn.style.transition = 'transform 0.9s cubic-bezier(0.25, 0.8, 0.25, 1)';
             noBtn.style.transform = `translate(${dx}px, ${dy}px) scale(1.03)`;
-            
+
             noHoverCount++;
+            lastEnterTime = now;
 
-            setTimeout(() => { isEscaping = false; }, 950);
+            if (noHoverCount >= maxHovers - 3) {
+                noBtn.classList.add('soft-pulse');
+            }
         }
+    });
 
-        if (noHoverCount >= maxHovers - 3) {
-            noBtn.classList.add('soft-pulse');
-        }
-    };
-
-    // Убираем уворот при уходе пальца/мыши
-    const handlePointerLeave = () => {
+    // Возврат на место при уходе
+    noBtn.addEventListener('pointerleave', () => {
         noBtn.style.transition = 'transform 0.75s ease-out';
         noBtn.style.transform = 'translate(0, 0) scale(1)';
-        isEscaping = false;
-    };
+    });
 
-    // Добавляем события
-    noBtn.addEventListener('mouseenter', handlePointerEnter);
-    noBtn.addEventListener('touchstart', handlePointerEnter, { passive: false });
-    noBtn.addEventListener('mouseleave', handlePointerLeave);
-    noBtn.addEventListener('touchend', handlePointerLeave);
-    noBtn.addEventListener('touchcancel', handlePointerLeave);
-
-    // Кнопка "Нет" — клик / тап
+    // Клик / тап на "Нет" — основной обработчик
     noBtn.addEventListener('click', (e) => {
-        e.preventDefault(); // предотвращаем двойное срабатывание
+        e.preventDefault();
         nextSlide('refuse');
     });
 
