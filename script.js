@@ -1,9 +1,25 @@
 let currentSlide = 1;
 
 function nextSlide(to) {
-    document.getElementById(`slide${currentSlide}`).classList.add('hidden');
-    document.getElementById(`slide${to}`).classList.remove('hidden');
-    currentSlide = to;
+    // Скрываем текущий слайд (с защитой)
+    const currentElem = document.getElementById(`slide${currentSlide}`);
+    if (currentElem) {
+        currentElem.classList.add('hidden');
+    }
+
+    // Показываем следующий
+    let nextId = typeof to === 'number' ? `slide${to}` : to;
+    const nextElem = document.getElementById(nextId);
+    if (nextElem) {
+        nextElem.classList.remove('hidden');
+    } else {
+        console.error(`Слайд не найден: ${nextId}`);
+    }
+
+    // Обновляем currentSlide только для числовых слайдов
+    if (typeof to === 'number') {
+        currentSlide = to;
+    }
 }
 
 function forceYes() {
@@ -47,9 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let noHoverCount = 0;
     const maxHovers = 8;
     let lastEnterTime = 0;
-    const minInterval = 700; // пауза между уворотами
+    const minInterval = 700;
 
-    // Уворот при наведении / касании
+    // Уворот при pointerenter (работает и на таче, и на мыши)
     noBtn.addEventListener('pointerenter', (e) => {
         const now = Date.now();
         if (now - lastEnterTime < minInterval) return;
@@ -86,15 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Возврат на место при уходе
     noBtn.addEventListener('pointerleave', () => {
         noBtn.style.transition = 'transform 0.75s ease-out';
         noBtn.style.transform = 'translate(0, 0) scale(1)';
     });
 
-    // Клик / тап на "Нет" — основной обработчик
+    // Клик / тап на "Нет"
     noBtn.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         nextSlide('refuse');
     });
 
