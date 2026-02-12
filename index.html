@@ -26,6 +26,37 @@
         perspective: 1200px;
     }
 
+    /* ЗАГРУЗОЧНЫЙ ЭКРАН */
+    #loader {
+        position: fixed;
+        inset: 0;
+        background: #ffb6c9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 9999;
+        animation: fadeIn 1s ease;
+    }
+
+    #loader h1 {
+        font-size: 2rem;
+        color: #d1005d;
+        margin-bottom: 20px;
+    }
+
+    #enterBtn {
+        padding: 14px 32px;
+        font-size: 1.2rem;
+        border: none;
+        border-radius: 999px;
+        background: #ff4f8b;
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(255, 79, 139, 0.5);
+    }
+
+    /* ОСНОВНОЙ САЙТ */
     .scene {
         width: 100vw;
         height: 100vh;
@@ -100,11 +131,6 @@
         box-shadow: 0 12px 24px rgba(255, 79, 139, 0.5);
     }
 
-    .yes:hover {
-        transform: translateY(-3px) scale(1.03) rotateX(6deg);
-        box-shadow: 0 18px 32px rgba(255, 79, 139, 0.7);
-    }
-
     .no {
         background: #444;
         color: white;
@@ -119,6 +145,24 @@
         margin: 0 auto;
     }
 
+    /* Появление фото */
+    .photo {
+        width: 200px;
+        border-radius: 20px;
+        margin: 10px;
+        opacity: 0;
+        transform: scale(0.7) rotateY(20deg);
+        animation: photoAppear 1.2s forwards ease;
+    }
+
+    @keyframes photoAppear {
+        to {
+            opacity: 1;
+            transform: scale(1) rotateY(0deg);
+        }
+    }
+
+    /* Сердечки */
     .heart {
         position: fixed;
         top: -10px;
@@ -133,15 +177,7 @@
         to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
     }
 
-    img {
-        width: 200px;
-        border-radius: 20px;
-        margin: 10px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.25);
-        animation: fadeIn 1.8s ease;
-        transform: rotateY(8deg) translateZ(30px);
-    }
-
+    /* Конфетти */
     .confetti {
         position: fixed;
         width: 8px;
@@ -159,6 +195,7 @@
         to { transform: translate3d(0, 110vh, 0) rotateZ(360deg); opacity: 0; }
     }
 
+    /* Кнопка музыки */
     .audio-btn {
         position: fixed;
         top: 16px;
@@ -171,23 +208,25 @@
         font-size: 0.9rem;
         border: none;
         cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 6px;
+        display: none;
     }
 </style>
 </head>
 
 <body>
 
+<!-- ЗАГРУЗОЧНЫЙ ЭКРАН -->
+<div id="loader">
+    <h1>Готова к сюрпризу? 💗</h1>
+    <button id="enterBtn">Войти</button>
+</div>
+
 <!-- Музыка -->
 <audio id="bgMusic" loop>
     <source src="https://dl.muzonovs.ru/files/music/2023/11/tri-dnya-dozhdya-progulka.mp3" type="audio/mpeg">
 </audio>
 
-<button class="audio-btn" id="audioToggle">
-    <span>🔊</span> Музыка
-</button>
+<button class="audio-btn" id="audioToggle">🔊 Музыка</button>
 
 <div class="scene">
     <div class="slider" id="slider">
@@ -218,10 +257,9 @@
         <div class="slide">
             <div class="slide-inner">
                 <h1>Я так и знал! ❤️</h1>
-                <p>Ты сделала меня самым счастливым человеком.</p>
                 <p>Теперь официально: ты — моя валентинка 💘</p>
-                <img src="photo1.jpg">
-                <img src="photo2.jpg">
+                <img src="photo1.jpg" class="photo">
+                <img src="photo2.jpg" class="photo">
             </div>
         </div>
 
@@ -230,8 +268,8 @@
             <div class="slide-inner">
                 <h1>Ты думала, что у тебя есть выбор?</h1>
                 <p>Его нет 😎 Теперь ты моя валентинка навсегда!!!</p>
-                <img src="photo1.jpg">
-                <img src="photo2.jpg">
+                <img src="photo1.jpg" class="photo">
+                <img src="photo2.jpg" class="photo">
             </div>
         </div>
 
@@ -243,6 +281,15 @@ let currentSlide = 0;
 const slider = document.getElementById("slider");
 const noBtn = document.getElementById("noBtn");
 let noCount = 0;
+
+/* ЗАГРУЗОЧНЫЙ ЭКРАН */
+document.getElementById("enterBtn").onclick = () => {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("audioToggle").style.display = "block";
+
+    const music = document.getElementById("bgMusic");
+    music.play().catch(() => {});
+};
 
 /* Переходы */
 function updateSlide() {
@@ -279,7 +326,7 @@ noBtn.addEventListener("click", () => {
     launchConfettiBurst();
 });
 
-/* Падающие сердечки */
+/* Сердечки */
 setInterval(() => {
     const heart = document.createElement("div");
     heart.classList.add("heart");
@@ -311,17 +358,17 @@ function launchConfettiBurst() {
 /* Музыка */
 const bgMusic = document.getElementById("bgMusic");
 const audioToggle = document.getElementById("audioToggle");
-let musicOn = false;
+let musicOn = true;
 
 audioToggle.addEventListener("click", () => {
-    if (!musicOn) {
-        bgMusic.play();
-        musicOn = true;
-        audioToggle.innerHTML = "<span>🔊</span> Музыка вкл";
-    } else {
+    if (musicOn) {
         bgMusic.pause();
         musicOn = false;
-        audioToggle.innerHTML = "<span>🔈</span> Музыка выкл";
+        audioToggle.innerHTML = "🔈 Музыка выкл";
+    } else {
+        bgMusic.play();
+        musicOn = true;
+        audioToggle.innerHTML = "🔊 Музыка вкл";
     }
 });
 </script>
