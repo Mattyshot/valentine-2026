@@ -50,8 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastEnterTime = 0;
     const minIntervalBetweenEscapes = 800;
 
-    const handleEnter = (e) => {
-        e.preventDefault();
+    // Обработка уворота (мышь + касание)
+    const handlePointerEnter = (e) => {
+        e.preventDefault(); // предотвращаем возможные дефолтные действия
         
         const now = Date.now();
         
@@ -96,21 +97,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    noBtn.addEventListener('mouseenter', handleEnter);
-    noBtn.addEventListener('touchstart', handleEnter, { passive: false });
-
-    noBtn.addEventListener('mouseleave', () => {
+    // Убираем уворот при уходе пальца/мыши
+    const handlePointerLeave = () => {
         noBtn.style.transition = 'transform 0.75s ease-out';
         noBtn.style.transform = 'translate(0, 0) scale(1)';
         isEscaping = false;
+    };
+
+    // Добавляем события
+    noBtn.addEventListener('mouseenter', handlePointerEnter);
+    noBtn.addEventListener('touchstart', handlePointerEnter, { passive: false });
+    noBtn.addEventListener('mouseleave', handlePointerLeave);
+    noBtn.addEventListener('touchend', handlePointerLeave);
+    noBtn.addEventListener('touchcancel', handlePointerLeave);
+
+    // Кнопка "Нет" — клик / тап
+    noBtn.addEventListener('click', (e) => {
+        e.preventDefault(); // предотвращаем двойное срабатывание
+        nextSlide('refuse');
     });
 
-    noBtn.addEventListener('touchend', () => {
-        noBtn.style.transition = 'transform 0.75s ease-out';
-        noBtn.style.transform = 'translate(0, 0) scale(1)';
-        isEscaping = false;
-    });
-
+    // Кнопка "Да"
     yesBtn.addEventListener('mouseenter', (e) => {
         for (let i = 0; i < 6; i++) {
             setTimeout(() => {
@@ -131,29 +138,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    yesBtn.addEventListener('click', () => {
+        showJoy('Урааа! Ты моя валентинка навсегда! 💖💖💖', true);
+    });
+
     const showJoy = (text, isYes = false) => {
         responseText.textContent = text;
         nextSlide(3);
         launchConfetti();
         if (isYes) setTimeout(launchConfetti, 800);
     };
-
-    yesBtn.addEventListener('click', () => {
-        showJoy('Урааа! Ты моя валентинка навсегда! 💖💖💖', true);
-    });
-
-    noBtn.addEventListener('click', () => {
-        nextSlide('refuse');
-    });
-
-    // Плавный скролл для фото на десктопе (колёсико мыши)
-    const photosContainer = document.querySelector('.photos-container');
-    if (photosContainer) {
-        photosContainer.addEventListener('wheel', (e) => {
-            if (e.deltaY !== 0) {
-                e.preventDefault();
-                photosContainer.scrollLeft += e.deltaY;
-            }
-        }, { passive: false });
-    }
 });
