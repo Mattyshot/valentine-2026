@@ -137,3 +137,4 @@ document.addEventListener("DOMContentLoaded", function () {
     if (isYes) setTimeout(launchConfetti, 800);
   }
 });
+
