@@ -20,25 +20,23 @@
     body {
         margin: 0;
         overflow: hidden;
-        font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: "Montserrat", sans-serif;
         background: radial-gradient(circle at top, var(--bg2), var(--bg1));
         color: #222;
         perspective: 1200px;
     }
 
-    /* Глобальный 3D-контейнер */
     .scene {
         width: 100vw;
         height: 100vh;
         transform-style: preserve-3d;
     }
 
-    /* Контейнер всех слайдов */
     .slider {
         width: 100vw;
         height: 100vh;
         display: flex;
-        transition: transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+        transition: transform 1s cubic-bezier(0.22, 0.61, 0.36, 1);
         transform-style: preserve-3d;
     }
 
@@ -46,10 +44,8 @@
         min-width: 100vw;
         height: 100vh;
         display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
-        text-align: center;
         padding: 20px;
         position: relative;
         transform-style: preserve-3d;
@@ -93,13 +89,7 @@
         border-radius: 999px;
         cursor: pointer;
         margin: 8px;
-        transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-        transform-style: preserve-3d;
-    }
-
-    button:active {
-        transform: translateY(2px) scale(0.97);
-        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+        transition: 0.25s;
     }
 
     .yes {
@@ -116,11 +106,10 @@
     .no {
         background: #444;
         color: white;
-        position: relative;
+        position: absolute;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     }
 
-    /* Убегающая кнопка — позиционируем внутри блока */
     .choice-wrapper {
         position: relative;
         width: 260px;
@@ -128,14 +117,6 @@
         margin: 0 auto;
     }
 
-    .choice-wrapper button {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    /* Падающие сердечки */
     .heart {
         position: fixed;
         top: -10px;
@@ -162,7 +143,6 @@
 
     img {
         width: 200px;
-        height: auto;
         border-radius: 20px;
         margin: 10px;
         box-shadow: 0 0 20px rgba(0,0,0,0.25);
@@ -170,7 +150,6 @@
         transform: rotateY(8deg) translateZ(30px);
     }
 
-    /* Конфетти */
     .confetti {
         position: fixed;
         width: 8px;
@@ -186,21 +165,6 @@
     @keyframes confettiFall {
         from { transform: translate3d(0, -10vh, 0) rotateZ(0deg); }
         to { transform: translate3d(0, 110vh, 0) rotateZ(360deg); opacity: 0; }
-    }
-
-    /* Подсказка про звук */
-    .audio-hint {
-        position: fixed;
-        bottom: 16px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0,0,0,0.6);
-        color: #fff;
-        padding: 8px 16px;
-        border-radius: 999px;
-        font-size: 0.9rem;
-        z-index: 5;
-        animation: fadeIn 1s ease;
     }
 
     .audio-btn {
@@ -220,22 +184,24 @@
         gap: 6px;
     }
 
-    .audio-btn span {
-        font-size: 1.1rem;
-    }
-
-    @media (max-width: 600px) {
-        h1 { font-size: 1.9rem; }
-        p { font-size: 1rem; }
-        img { width: 160px; }
-        .slide-inner { padding: 22px 16px; }
+    .audio-hint {
+        position: fixed;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 999px;
+        font-size: 0.9rem;
+        z-index: 5;
+        animation: fadeIn 1s ease;
     }
 </style>
 </head>
 
 <body>
 
-<!-- Музыка -->
 <audio id="bgMusic" loop>
     <source src="music.mp3" type="audio/mpeg">
 </audio>
@@ -244,26 +210,24 @@
     <span>🔊</span> Музыка
 </button>
 <div class="audio-hint" id="audioHint">
-    Нажми где‑нибудь на экран, чтобы включить музыку 💗
+    Нажми на экран, чтобы включить музыку 💗
 </div>
 
 <div class="scene">
     <div class="slider" id="slider">
 
-        <!-- Слайд 1 -->
         <div class="slide">
             <div class="slide-inner">
                 <h1>14 февраля уже близко…</h1>
-                <p>И у меня есть кое‑что очень важное именно для тебя 💌</p>
+                <p>И у меня есть кое‑что очень важное для тебя 💌</p>
                 <button class="yes" onclick="nextSlide()">Далее</button>
             </div>
         </div>
 
-        <!-- Слайд 2 -->
         <div class="slide">
             <div class="slide-inner">
                 <h1>Будешь моей валентинкой?</h1>
-                <p>Отвечай честно… но помни, судьба уже всё решила 😉</p>
+                <p>Отвечай честно… но судьба уже всё решила 😉</p>
                 <div class="choice-wrapper">
                     <button class="yes" onclick="yes()">Да ❤️</button>
                     <button class="no" id="noBtn" onclick="no()">Нет 😈</button>
@@ -271,28 +235,22 @@
             </div>
         </div>
 
-        <!-- Слайд 3 — выбрала ДА -->
         <div class="slide">
             <div class="slide-inner">
                 <h1>Я так и знал! ❤️</h1>
-                <p>Ты только что сделала меня самым счастливым человеком на свете.</p>
+                <p>Ты сделала меня самым счастливым человеком.</p>
                 <p>Теперь официально: ты — моя валентинка 💘</p>
-                <div>
-                    <img src="photo1.jpg" alt="Фото 1">
-                    <img src="photo2.jpg" alt="Фото 2">
-                </div>
+                <img src="photo1.jpg">
+                <img src="photo2.jpg">
             </div>
         </div>
 
-        <!-- Слайд 4 — выбрала НЕТ -->
         <div class="slide">
             <div class="slide-inner">
                 <h1>Ты думала, что у тебя есть выбор?</h1>
                 <p>Его нет 😎 Теперь ты моя валентинка навсегда!!!</p>
-                <div>
-                    <img src="photo1.jpg" alt="Фото 1">
-                    <img src="photo2.jpg" alt="Фото 2">
-                </div>
+                <img src="photo1.jpg">
+                <img src="photo2.jpg">
             </div>
         </div>
 
@@ -309,31 +267,24 @@ const audioToggle = document.getElementById("audioToggle");
 const audioHint = document.getElementById("audioHint");
 let musicEnabled = false;
 
-/* Переход между слайдами с лёгким 3D */
 function updateSlide() {
-    const offset = -currentSlide * 100;
-    slider.style.transform = `translateX(${offset}vw) rotateY(${currentSlide * 6}deg)`;
+    slider.style.transform = `translateX(-${currentSlide * 100}vw) rotateY(${currentSlide * 6}deg)`;
 }
 
-/* Слайд 1 -> 2 */
 function nextSlide() {
     currentSlide = 1;
     updateSlide();
 }
 
-/* Выбрала ДА */
 function yes() {
     currentSlide = 2;
     updateSlide();
     launchConfettiBurst();
 }
 
-/* Выбрала НЕТ */
 function no() {
     noHoverCount++;
-    if (noHoverCount < 8) {
-        // ничего, просто продолжаем убегать
-    } else {
+    if (noHoverCount >= 8) {
         currentSlide = 3;
         updateSlide();
         launchConfettiBurst();
@@ -343,7 +294,6 @@ function no() {
     }
 }
 
-/* Убегающая кнопка — двигаем при наведении */
 noBtn.addEventListener("mouseenter", () => {
     noHoverCount++;
     if (noHoverCount <= 8) {
@@ -351,15 +301,11 @@ noBtn.addEventListener("mouseenter", () => {
         const rect = wrapper.getBoundingClientRect();
         const maxX = rect.width - 120;
         const maxY = rect.height - 60;
-        const randX = Math.random() * maxX;
-        const randY = Math.random() * maxY;
-        noBtn.style.left = randX + "px";
-        noBtn.style.top = randY + "px";
-        noBtn.style.transform = "none";
+        noBtn.style.left = Math.random() * maxX + "px";
+        noBtn.style.top = Math.random() * maxY + "px";
     }
 });
 
-/* Падающие сердечки */
 setInterval(() => {
     const heart = document.createElement("div");
     heart.classList.add("heart");
@@ -367,11 +313,9 @@ setInterval(() => {
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.animationDuration = (3 + Math.random()*4) + "s";
     document.body.appendChild(heart);
-
     setTimeout(() => heart.remove(), 8000);
 }, 350);
 
-/* Конфетти */
 function createConfettiPiece() {
     const conf = document.createElement("div");
     conf.classList.add("confetti");
@@ -379,7 +323,6 @@ function createConfettiPiece() {
     conf.style.background = colors[Math.floor(Math.random()*colors.length)];
     conf.style.left = Math.random() * 100 + "vw";
     conf.style.animationDuration = (2 + Math.random()*2) + "s";
-    conf.style.transform = `translate3d(0,0,0) rotateZ(${Math.random()*360}deg)`;
     document.body.appendChild(conf);
     setTimeout(() => conf.remove(), 5000);
 }
@@ -390,15 +333,12 @@ function launchConfettiBurst() {
     }
 }
 
-/* Музыка — включение по клику (ограничения браузеров) */
 function tryPlayMusic() {
     if (!musicEnabled) {
         bgMusic.play().then(() => {
             musicEnabled = true;
-            if (audioHint) audioHint.style.display = "none";
+            audioHint.style.display = "none";
             audioToggle.innerHTML = '<span>🔊</span> Музыка вкл';
-        }).catch(() => {
-            // если не получилось — ничего, пользователь может нажать кнопку
         });
     }
 }
@@ -407,18 +347,14 @@ document.addEventListener("click", tryPlayMusic, { once: true });
 
 audioToggle.addEventListener("click", () => {
     if (!musicEnabled) {
-        bgMusic.play().then(() => {
-            musicEnabled = true;
-            audioToggle.innerHTML = '<span>🔊</span> Музыка вкл';
-            if (audioHint) audioHint.style.display = "none";
-        }).catch(() => {});
+        tryPlayMusic();
     } else {
-        if (!bgMusic.paused) {
-            bgMusic.pause();
-            audioToggle.innerHTML = '<span>🔈</span> Музыка выкл';
-        } else {
+        if (bgMusic.paused) {
             bgMusic.play();
             audioToggle.innerHTML = '<span>🔊</span> Музыка вкл';
+        } else {
+            bgMusic.pause();
+            audioToggle.innerHTML = '<span>🔈</span> Музыка выкл';
         }
     }
 });
