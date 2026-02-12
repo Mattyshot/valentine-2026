@@ -6,11 +6,31 @@
 <title>Будешь моей валентинкой?</title>
 
 <style>
+    :root {
+        --pink: #ff4f8b;
+        --dark: #2b2b2b;
+        --bg1: #ffdde1;
+        --bg2: #ee9ca7;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
     body {
         margin: 0;
         overflow: hidden;
-        font-family: "Montserrat", sans-serif;
-        background: #ffdde1;
+        font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        background: radial-gradient(circle at top, var(--bg2), var(--bg1));
+        color: #222;
+        perspective: 1200px;
+    }
+
+    /* Глобальный 3D-контейнер */
+    .scene {
+        width: 100vw;
+        height: 100vh;
+        transform-style: preserve-3d;
     }
 
     /* Контейнер всех слайдов */
@@ -18,7 +38,8 @@
         width: 100vw;
         height: 100vh;
         display: flex;
-        transition: transform 0.8s ease-in-out;
+        transition: transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+        transform-style: preserve-3d;
     }
 
     .slide {
@@ -30,48 +51,88 @@
         align-items: center;
         text-align: center;
         padding: 20px;
-        box-sizing: border-box;
+        position: relative;
+        transform-style: preserve-3d;
+    }
+
+    .slide-inner {
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 24px;
+        padding: 30px 20px;
+        max-width: 480px;
+        width: 90%;
+        backdrop-filter: blur(18px);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+        transform: rotateY(-6deg) translateZ(40px);
+        animation: cardFloat 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes cardFloat {
+        from { transform: rotateY(-6deg) translateZ(40px) translateY(0); }
+        to   { transform: rotateY(6deg) translateZ(60px) translateY(-10px); }
     }
 
     h1 {
         font-size: 2.4rem;
         color: #d1005d;
-        margin-bottom: 20px;
-        animation: fadeIn 1.5s ease;
+        margin-bottom: 16px;
+        animation: fadeInDown 1.2s ease;
     }
 
     p {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         color: #333;
-        animation: fadeIn 2s ease;
+        margin-bottom: 18px;
+        animation: fadeIn 1.6s ease;
     }
 
     button {
-        padding: 15px 35px;
-        font-size: 1.3rem;
+        padding: 14px 32px;
+        font-size: 1.1rem;
         border: none;
-        border-radius: 12px;
+        border-radius: 999px;
         cursor: pointer;
-        margin: 10px;
-        transition: 0.3s;
+        margin: 8px;
+        transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        transform-style: preserve-3d;
+    }
+
+    button:active {
+        transform: translateY(2px) scale(0.97);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
     }
 
     .yes {
-        background: #ff4f8b;
+        background: linear-gradient(135deg, #ff4f8b, #ff8ba7);
         color: white;
+        box-shadow: 0 12px 24px rgba(255, 79, 139, 0.5);
+    }
+
+    .yes:hover {
+        transform: translateY(-3px) scale(1.03) rotateX(6deg);
+        box-shadow: 0 18px 32px rgba(255, 79, 139, 0.7);
     }
 
     .no {
         background: #444;
         color: white;
         position: relative;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     }
 
-    /* Убегающая кнопка */
-    .no:hover {
+    /* Убегающая кнопка — позиционируем внутри блока */
+    .choice-wrapper {
+        position: relative;
+        width: 260px;
+        height: 120px;
+        margin: 0 auto;
+    }
+
+    .choice-wrapper button {
         position: absolute;
-        left: calc(50% - 100px + (Math.random() * 200px));
-        top: calc(50% - 50px + (Math.random() * 200px));
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
     }
 
     /* Падающие сердечки */
@@ -81,6 +142,7 @@
         font-size: 24px;
         animation: fall linear forwards;
         pointer-events: none;
+        z-index: 1;
     }
 
     @keyframes fall {
@@ -93,82 +155,209 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
     img {
-        width: 220px;
+        width: 200px;
         height: auto;
         border-radius: 20px;
-        margin-top: 20px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.2);
-        animation: fadeIn 2s ease;
+        margin: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.25);
+        animation: fadeIn 1.8s ease;
+        transform: rotateY(8deg) translateZ(30px);
+    }
+
+    /* Конфетти */
+    .confetti {
+        position: fixed;
+        width: 8px;
+        height: 14px;
+        background: red;
+        top: -20px;
+        opacity: 0.9;
+        animation: confettiFall linear forwards;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    @keyframes confettiFall {
+        from { transform: translate3d(0, -10vh, 0) rotateZ(0deg); }
+        to { transform: translate3d(0, 110vh, 0) rotateZ(360deg); opacity: 0; }
+    }
+
+    /* Подсказка про звук */
+    .audio-hint {
+        position: fixed;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 999px;
+        font-size: 0.9rem;
+        z-index: 5;
+        animation: fadeIn 1s ease;
+    }
+
+    .audio-btn {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        z-index: 6;
+        background: rgba(0,0,0,0.65);
+        color: #fff;
+        border-radius: 999px;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .audio-btn span {
+        font-size: 1.1rem;
+    }
+
+    @media (max-width: 600px) {
+        h1 { font-size: 1.9rem; }
+        p { font-size: 1rem; }
+        img { width: 160px; }
+        .slide-inner { padding: 22px 16px; }
     }
 </style>
 </head>
 
 <body>
 
-<div class="slider" id="slider">
+<!-- Музыка -->
+<audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
 
-    <!-- Слайд 1 -->
-    <div class="slide">
-        <h1>14 февраля уже близко…</h1>
-        <p>И у меня есть кое‑что важное для тебя</p>
-        <button class="yes" onclick="nextSlide()">Далее</button>
-    </div>
+<button class="audio-btn" id="audioToggle">
+    <span>🔊</span> Музыка
+</button>
+<div class="audio-hint" id="audioHint">
+    Нажми где‑нибудь на экран, чтобы включить музыку 💗
+</div>
 
-    <!-- Слайд 2 -->
-    <div class="slide">
-        <h1>Будешь моей валентинкой?</h1>
-        <div>
-            <button class="yes" onclick="yes()">Да ❤️</button>
-            <button class="no" id="noBtn" onclick="no()">Нет 😈</button>
+<div class="scene">
+    <div class="slider" id="slider">
+
+        <!-- Слайд 1 -->
+        <div class="slide">
+            <div class="slide-inner">
+                <h1>14 февраля уже близко…</h1>
+                <p>И у меня есть кое‑что очень важное именно для тебя 💌</p>
+                <button class="yes" onclick="nextSlide()">Далее</button>
+            </div>
         </div>
-    </div>
 
-    <!-- Слайд 3 — выбрала ДА -->
-    <div class="slide">
-        <h1>Я так и знал! ❤️</h1>
-        <p>Ты сделала меня самым счастливым человеком</p>
-        <img src="photo1.jpg" alt="Фото 1">
-        <img src="photo2.jpg" alt="Фото 2">
-    </div>
+        <!-- Слайд 2 -->
+        <div class="slide">
+            <div class="slide-inner">
+                <h1>Будешь моей валентинкой?</h1>
+                <p>Отвечай честно… но помни, судьба уже всё решила 😉</p>
+                <div class="choice-wrapper">
+                    <button class="yes" onclick="yes()">Да ❤️</button>
+                    <button class="no" id="noBtn" onclick="no()">Нет 😈</button>
+                </div>
+            </div>
+        </div>
 
-    <!-- Слайд 4 — выбрала НЕТ -->
-    <div class="slide">
-        <h1>Ты думала, что у тебя есть выбор?</h1>
-        <p>Его нет 😎 Теперь ты моя валентинка!!!</p>
-        <img src="photo1.jpg" alt="Фото 1">
-        <img src="photo2.jpg" alt="Фото 2">
-    </div>
+        <!-- Слайд 3 — выбрала ДА -->
+        <div class="slide">
+            <div class="slide-inner">
+                <h1>Я так и знал! ❤️</h1>
+                <p>Ты только что сделала меня самым счастливым человеком на свете.</p>
+                <p>Теперь официально: ты — моя валентинка 💘</p>
+                <div>
+                    <img src="photo1.jpg" alt="Фото 1">
+                    <img src="photo2.jpg" alt="Фото 2">
+                </div>
+            </div>
+        </div>
 
+        <!-- Слайд 4 — выбрала НЕТ -->
+        <div class="slide">
+            <div class="slide-inner">
+                <h1>Ты думала, что у тебя есть выбор?</h1>
+                <p>Его нет 😎 Теперь ты моя валентинка навсегда!!!</p>
+                <div>
+                    <img src="photo1.jpg" alt="Фото 1">
+                    <img src="photo2.jpg" alt="Фото 2">
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <script>
 let currentSlide = 0;
 let noHoverCount = 0;
+const slider = document.getElementById("slider");
+const noBtn = document.getElementById("noBtn");
+const bgMusic = document.getElementById("bgMusic");
+const audioToggle = document.getElementById("audioToggle");
+const audioHint = document.getElementById("audioHint");
+let musicEnabled = false;
 
-function nextSlide() {
-    currentSlide++;
-    document.getElementById("slider").style.transform =
-        `translateX(-${currentSlide * 100}vw)`;
+/* Переход между слайдами с лёгким 3D */
+function updateSlide() {
+    const offset = -currentSlide * 100;
+    slider.style.transform = `translateX(${offset}vw) rotateY(${currentSlide * 6}deg)`;
 }
 
+/* Слайд 1 -> 2 */
+function nextSlide() {
+    currentSlide = 1;
+    updateSlide();
+}
+
+/* Выбрала ДА */
 function yes() {
     currentSlide = 2;
-    document.getElementById("slider").style.transform =
-        `translateX(-${currentSlide * 100}vw)`;
+    updateSlide();
+    launchConfettiBurst();
 }
 
+/* Выбрала НЕТ */
 function no() {
     noHoverCount++;
     if (noHoverCount < 8) {
-        // просто убегает
+        // ничего, просто продолжаем убегать
     } else {
-        // после 8 попыток — переход на слайд 4
         currentSlide = 3;
-        document.getElementById("slider").style.transform =
-            `translateX(-${currentSlide * 100}vw)`;
+        updateSlide();
+        launchConfettiBurst();
+        setTimeout(() => {
+            alert("Ты правда думала, что у тебя есть выбор? 😏 Теперь ты моя валентинка!!!");
+        }, 600);
     }
 }
+
+/* Убегающая кнопка — двигаем при наведении */
+noBtn.addEventListener("mouseenter", () => {
+    noHoverCount++;
+    if (noHoverCount <= 8) {
+        const wrapper = document.querySelector(".choice-wrapper");
+        const rect = wrapper.getBoundingClientRect();
+        const maxX = rect.width - 120;
+        const maxY = rect.height - 60;
+        const randX = Math.random() * maxX;
+        const randY = Math.random() * maxY;
+        noBtn.style.left = randX + "px";
+        noBtn.style.top = randY + "px";
+        noBtn.style.transform = "none";
+    }
+});
 
 /* Падающие сердечки */
 setInterval(() => {
@@ -179,8 +368,60 @@ setInterval(() => {
     heart.style.animationDuration = (3 + Math.random()*4) + "s";
     document.body.appendChild(heart);
 
-    setTimeout(() => heart.remove(), 7000);
-}, 300);
+    setTimeout(() => heart.remove(), 8000);
+}, 350);
+
+/* Конфетти */
+function createConfettiPiece() {
+    const conf = document.createElement("div");
+    conf.classList.add("confetti");
+    const colors = ["#ff4f8b","#ffce00","#00d2ff","#9b5de5","#ff6f91"];
+    conf.style.background = colors[Math.floor(Math.random()*colors.length)];
+    conf.style.left = Math.random() * 100 + "vw";
+    conf.style.animationDuration = (2 + Math.random()*2) + "s";
+    conf.style.transform = `translate3d(0,0,0) rotateZ(${Math.random()*360}deg)`;
+    document.body.appendChild(conf);
+    setTimeout(() => conf.remove(), 5000);
+}
+
+function launchConfettiBurst() {
+    for (let i = 0; i < 80; i++) {
+        setTimeout(createConfettiPiece, i * 15);
+    }
+}
+
+/* Музыка — включение по клику (ограничения браузеров) */
+function tryPlayMusic() {
+    if (!musicEnabled) {
+        bgMusic.play().then(() => {
+            musicEnabled = true;
+            if (audioHint) audioHint.style.display = "none";
+            audioToggle.innerHTML = '<span>🔊</span> Музыка вкл';
+        }).catch(() => {
+            // если не получилось — ничего, пользователь может нажать кнопку
+        });
+    }
+}
+
+document.addEventListener("click", tryPlayMusic, { once: true });
+
+audioToggle.addEventListener("click", () => {
+    if (!musicEnabled) {
+        bgMusic.play().then(() => {
+            musicEnabled = true;
+            audioToggle.innerHTML = '<span>🔊</span> Музыка вкл';
+            if (audioHint) audioHint.style.display = "none";
+        }).catch(() => {});
+    } else {
+        if (!bgMusic.paused) {
+            bgMusic.pause();
+            audioToggle.innerHTML = '<span>🔈</span> Музыка выкл';
+        } else {
+            bgMusic.play();
+            audioToggle.innerHTML = '<span>🔊</span> Музыка вкл';
+        }
+    }
+});
 </script>
 
 </body>
