@@ -6,6 +6,10 @@ function nextSlide(to) {
     currentSlide = to;
 }
 
+function forceYes() {
+    showJoy('Теперь точно моя валентинка! ❤️❤️❤️', true);
+}
+
 function launchConfetti() {
     confetti({
         particleCount: 120,
@@ -46,7 +50,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastEnterTime = 0;
     const minIntervalBetweenEscapes = 800;
 
-    noBtn.addEventListener('mouseenter', (e) => {
+    // Объединяем mouseenter и touchstart для мобильных
+    const handleEnter = (e) => {
+        e.preventDefault(); // предотвращаем возможный клик сразу
+        
         const now = Date.now();
         
         if (isEscaping || (now - lastEnterTime < minIntervalBetweenEscapes)) {
@@ -61,11 +68,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const btnCenterX = rect.left + rect.width / 2;
             const btnCenterY = rect.top + rect.height / 2;
             
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
+            // Для touch берём первую точку касания
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             
-            let dx = btnCenterX - mouseX;
-            let dy = btnCenterY - mouseY;
+            let dx = btnCenterX - clientX;
+            let dy = btnCenterY - clientY;
             
             const len = Math.sqrt(dx * dx + dy * dy) || 1;
             
@@ -88,7 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (noHoverCount >= maxHovers - 3) {
             noBtn.classList.add('soft-pulse');
         }
-    });
+    };
+
+    noBtn.addEventListener('mouseenter', handleEnter);
+    noBtn.addEventListener('touchstart', handleEnter, { passive: false });
 
     noBtn.addEventListener('mouseleave', () => {
         noBtn.style.transition = 'transform 0.75s ease-out';
@@ -96,7 +107,15 @@ document.addEventListener('DOMContentLoaded', () => {
         isEscaping = false;
     });
 
+    noBtn.addEventListener('touchend', () => {
+        noBtn.style.transition = 'transform 0.75s ease-out';
+        noBtn.style.transform = 'translate(0, 0) scale(1)';
+        isEscaping = false;
+    });
+
+    // Остальной код без изменений
     yesBtn.addEventListener('mouseenter', (e) => {
+        // ... сердечки при наведении ...
         for (let i = 0; i < 6; i++) {
             setTimeout(() => {
                 const heart = document.createElement('span');
@@ -128,6 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     noBtn.addEventListener('click', () => {
-        showJoy('Выбора не было с самого начала 😏 Теперь ты моя! ❤️❤️❤️');
+        nextSlide('refuse');  // → промежуточный экран отказа
     });
 });
