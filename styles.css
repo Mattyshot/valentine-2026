@@ -11,6 +11,8 @@ body {
     min-height: 100vh;
     overflow: hidden;
     position: relative;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .slide {
@@ -19,15 +21,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    transition: opacity 1.2s ease, transform 1.2s ease;
+    padding: 16px;
+    transition: opacity 1.3s ease;
     opacity: 0;
-    transform: scale(0.95);
 }
 
 .slide:not(.hidden) {
     opacity: 1;
-    transform: scale(1);
     z-index: 10;
 }
 
@@ -38,51 +38,52 @@ body {
 
 .content {
     text-align: center;
-    max-width: 90%;
-    background: rgba(255, 182, 193, 0.35);
-    backdrop-filter: blur(8px);
-    padding: 60px 50px;
+    width: 100%;
+    max-width: 92%;
+    background: rgba(255, 182, 193, 0.38);
+    backdrop-filter: blur(10px);
+    padding: 44px 28px;
     border-radius: 28px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.22);
 }
 
 h1 {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
-    font-size: 6.5rem;
-    margin-bottom: 30px;
-    color: #fff;
-    text-shadow: 0 5px 18px rgba(255, 20, 147, 0.75), 0 0 30px rgba(255,105,180,0.6);
-    letter-spacing: 4px;
+    font-size: clamp(3.8rem, 12vw, 5.8rem);
+    margin-bottom: 24px;
+    letter-spacing: 2px;
+    text-shadow: 0 4px 16px rgba(255, 20, 147, 0.7);
 }
 
 .subtitle {
-    font-size: 3.2rem;
-    font-weight: 500;
-    line-height: 1.45;
-    margin: 50px 0 70px;
-    color: #ffffff;
-    text-shadow: 0 4px 16px rgba(0,0,0,0.55), 0 0 28px rgba(255,105,180,0.65);
-    max-width: 90%;
+    font-size: clamp(1.9rem, 6vw, 2.9rem);
+    line-height: 1.42;
+    margin: 32px 0 48px;
+    max-width: 100%;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.5);
 }
 
 .buttons {
     display: flex;
-    justify-content: center;
-    gap: 50px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    margin-top: 20px;
 }
 
 button {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 2.6rem;
-    padding: 20px 60px;
+    font-size: clamp(1.9rem, 5.5vw, 2.4rem);
+    padding: 18px 54px;
     border: none;
-    border-radius: 50px;
+    border-radius: 999px;
     cursor: pointer;
-    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    transition: all 0.4s ease;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    min-width: 220px;
+    touch-action: manipulation;
 }
 
 #yesBtn {
@@ -93,100 +94,64 @@ button {
 #noBtn {
     background: linear-gradient(45deg, #a0a0a0, #808080);
     color: white;
-    position: relative;
 }
 
-button:hover {
-    transform: translateY(-6px) scale(1.08);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+button:active {
+    transform: scale(0.96);
 }
 
 .next-btn {
-    margin-top: 40px;
-    font-size: 2.4rem;
-    padding: 18px 50px;
-    background: rgba(255,255,255,0.25);
+    font-size: clamp(1.8rem, 5vw, 2.2rem);
+    padding: 16px 48px;
+    background: rgba(255,255,255,0.28);
     color: white;
-    border: 2px solid rgba(255,255,255,0.6);
+    border: 2px solid rgba(255,255,255,0.55);
+    min-width: 240px;
 }
 
 .photos {
     display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin: 30px 0;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    margin: 28px 0;
 }
 
 .photos img {
-    max-width: 260px;
-    border-radius: 24px;
-    border: 8px solid rgba(255,255,255,0.4);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.3);
-    transition: transform 0.7s ease;
-}
-
-.photos img:hover {
-    transform: scale(1.08) rotate(3deg);
+    max-width: 86%;
+    width: 100%;
+    max-width: 340px;
+    border-radius: 20px;
+    border: 6px solid rgba(255,255,255,0.38);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.28);
 }
 
 .joy h1 {
-    font-size: 4.8rem;
-    margin-bottom: 30px;
+    font-size: clamp(3.2rem, 10vw, 4.5rem);
+    margin-bottom: 24px;
 }
 
 .heart-emoji {
-    font-size: 3.8rem;
-    display: inline-block;
-    animation: heartbeat 2.2s infinite ease-in-out;
+    font-size: clamp(3rem, 9vw, 4.2rem);
+    animation: heartbeat 2.4s infinite ease-in-out;
 }
 
 .beat {
-    font-size: 4.2rem;
-    animation: pulse 1.8s infinite;
+    animation: pulse 1.9s infinite;
 }
 
 .soft-pulse {
-    animation: softPulse 1.8s infinite ease-in-out;
+    animation: softPulse 2s infinite ease-in-out;
 }
 
-@keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.25); }
-}
-
-@keyframes pulse {
-    0%,100% { transform: scale(1); }
-    50% { transform: scale(1.15); }
-}
-
-@keyframes softPulse {
-    0%, 100% {
-        transform: translate(0, 0) scale(1);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-    }
-    50% {
-        transform: translate(0, -6px) scale(1.06);
-        box-shadow: 0 15px 35px rgba(255, 105, 180, 0.4);
-    }
-}
-
-.slide:not(.hidden) .subtitle {
-    animation: fadeInUp 2.2s ease-out forwards;
-}
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(40px); }
-    to   { opacity: 1; transform: translateY(0);   }
-}
-
-/* Падающие сердца */
+/* Падающие сердца — легче для мобильных */
 .hearts {
     position: fixed;
     inset: 0;
     pointer-events: none;
     overflow: hidden;
     z-index: 0;
+    opacity: 0.92;
 }
 
 .hearts::before,
@@ -194,36 +159,98 @@ button:hover {
     content: '';
     position: absolute;
     width: 100%;
-    height: 100%;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="40" fill="rgba(255,105,180,0.6)">❤️</text></svg>') repeat;
-    animation: fall-bg 25s linear infinite;
+    height: 200%;
+    background-size: 80px;
+    animation: fall-bg 40s linear infinite;
+}
+
+.hearts::before {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="40" fill="rgba(255,105,180,0.55)">❤️</text></svg>') repeat-x;
 }
 
 .hearts::after {
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="55" fill="rgba(255,182,193,0.5)">💕</text></svg>') repeat;
-    animation: fall-bg 35s linear infinite reverse;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="50" fill="rgba(255,182,193,0.45)">💕</text></svg>') repeat-x;
+    animation-direction: reverse;
+    animation-duration: 55s;
     opacity: 0.7;
 }
 
 @keyframes fall-bg {
-    0% { transform: translateY(-100%) rotate(0deg); }
-    100% { transform: translateY(100%) rotate(360deg); }
+    0%   { transform: translateY(-50%); }
+    100% { transform: translateY(100%); }
 }
 
-/* yes-particle */
-.yes-particle {
-    position: absolute;
-    pointer-events: none;
-    font-size: 28px;
-    opacity: 0;
-    transition: all 0.8s ease-out;
+/* Анимации */
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.22); }
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-    h1 { font-size: 4.8rem; }
-    .subtitle { font-size: 2.4rem; margin: 40px 0 60px; }
-    button { font-size: 2.1rem; padding: 16px 45px; }
-    .photos img { max-width: 220px; }
-    .content { padding: 40px 25px; }
+@keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50%     { transform: scale(1.12); }
+}
+
+@keyframes softPulse {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-5px) scale(1.04); }
+}
+
+.slide:not(.hidden) .subtitle {
+    animation: fadeInUp 2s ease-out;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Медиа-запросы — основной оптимизатор для мобильных */
+@media (max-width: 640px) {
+    .content {
+        padding: 36px 24px;
+        border-radius: 24px;
+    }
+    
+    h1 {
+        font-size: clamp(3.2rem, 11vw, 4.8rem);
+    }
+    
+    .subtitle {
+        font-size: clamp(1.7rem, 5.5vw, 2.4rem);
+        margin: 28px 0 44px;
+    }
+    
+    button, .next-btn {
+        font-size: clamp(1.8rem, 5.2vw, 2.3rem);
+        padding: 16px 50px;
+        min-width: 240px;
+    }
+    
+    .buttons {
+        gap: 32px;
+    }
+    
+    .photos {
+        gap: 32px;
+    }
+    
+    .photos img {
+        max-width: 92%;
+        border-width: 5px;
+    }
+}
+
+@media (max-height: 680px) {
+    .content {
+        padding: 32px 24px;
+    }
+    
+    h1 {
+        margin-bottom: 16px;
+    }
+    
+    .subtitle {
+        margin: 24px 0 36px;
+    }
 }
