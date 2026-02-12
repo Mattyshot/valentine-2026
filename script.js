@@ -7,7 +7,7 @@ function nextSlide(to) {
 }
 
 function forceYes() {
-    showJoy('Теперь точно моя валентинка! ❤️❤️❤️', true);
+    showJoy('Теперь точно моя валентинка навсегда! 💖💖💖', true);
 }
 
 function launchConfetti() {
@@ -50,9 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastEnterTime = 0;
     const minIntervalBetweenEscapes = 800;
 
-    // Объединяем mouseenter и touchstart для мобильных
     const handleEnter = (e) => {
-        e.preventDefault(); // предотвращаем возможный клик сразу
+        e.preventDefault();
         
         const now = Date.now();
         
@@ -68,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const btnCenterX = rect.left + rect.width / 2;
             const btnCenterY = rect.top + rect.height / 2;
             
-            // Для touch берём первую точку касания
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             
@@ -113,9 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isEscaping = false;
     });
 
-    // Остальной код без изменений
     yesBtn.addEventListener('mouseenter', (e) => {
-        // ... сердечки при наведении ...
         for (let i = 0; i < 6; i++) {
             setTimeout(() => {
                 const heart = document.createElement('span');
@@ -147,6 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     noBtn.addEventListener('click', () => {
-        nextSlide('refuse');  // → промежуточный экран отказа
+        nextSlide('refuse');
     });
 });
