@@ -1,22 +1,31 @@
 let currentSlide = 1;
 
 function nextSlide(to) {
-    // Скрываем текущий слайд (с защитой)
+    // Скрываем текущий слайд
     const currentElem = document.getElementById(`slide${currentSlide}`);
     if (currentElem) {
         currentElem.classList.add('hidden');
+    } else {
+        console.warn(`Текущий слайд не найден: slide${currentSlide}`);
+    }
+
+    // Определяем id следующего слайда
+    let nextId;
+    if (typeof to === 'number') {
+        nextId = `slide${to}`;
+    } else {
+        nextId = to; // например 'slide-refuse'
     }
 
     // Показываем следующий
-    let nextId = typeof to === 'number' ? `slide${to}` : to;
     const nextElem = document.getElementById(nextId);
     if (nextElem) {
         nextElem.classList.remove('hidden');
     } else {
-        console.error(`Слайд не найден: ${nextId}`);
+        console.error(`Следующий слайд не найден: ${nextId}`);
     }
 
-    // Обновляем currentSlide только для числовых слайдов
+    // Обновляем currentSlide только если это числовой слайд
     if (typeof to === 'number') {
         currentSlide = to;
     }
@@ -34,7 +43,7 @@ function launchConfetti() {
         colors: ['#ff69b4', '#ff1493', '#ffb6c1', '#ffffff', '#ff85c0'],
         ticks: 300
     });
-    
+
     setTimeout(() => {
         confetti({
             particleCount: 80,
@@ -65,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastEnterTime = 0;
     const minInterval = 700;
 
-    // Уворот при pointerenter (работает и на таче, и на мыши)
+    // Уворот кнопки «Нет» при наведении / касании
     noBtn.addEventListener('pointerenter', (e) => {
         const now = Date.now();
         if (now - lastEnterTime < minInterval) return;
@@ -107,14 +116,14 @@ document.addEventListener('DOMContentLoaded', () => {
         noBtn.style.transform = 'translate(0, 0) scale(1)';
     });
 
-    // Клик / тап на "Нет"
+    // Реакция на клик / тап по «Нет»
     noBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        nextSlide('refuse');
+        nextSlide('slide-refuse');
     });
 
-    // Кнопка "Да"
+    // Кнопка «Да»
     yesBtn.addEventListener('mouseenter', (e) => {
         for (let i = 0; i < 6; i++) {
             setTimeout(() => {
@@ -140,7 +149,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const showJoy = (text, isYes = false) => {
-        responseText.textContent = text;
+        if (responseText) {
+            responseText.textContent = text;
+        }
         nextSlide(3);
         launchConfetti();
         if (isYes) setTimeout(launchConfetti, 800);
