@@ -1,199 +1,147 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+let currentSlide = 1;
+
+function nextSlide(to) {
+    const currentElem = document.getElementById("slide" + currentSlide);
+    if (currentElem) {
+        currentElem.classList.add("hidden");
+    }
+
+    let nextId = (typeof to === "number") ? "slide" + to : to;
+    const nextElem = document.getElementById(nextId);
+    if (nextElem) {
+        nextElem.classList.remove("hidden");
+    }
+
+    if (typeof to === "number") {
+        currentSlide = to;
+    }
 }
 
-body {
-    font-family: 'Cormorant Garamond', serif;
-    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
-    color: #fff;
-    min-height: 100vh;
-    overflow: hidden;
-    position: relative;
+function forceYes() {
+    showJoy("Теперь точно моя валентинка навсегда! 💖💖💖", true);
 }
 
-.slide {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 12px;
-    transition: opacity 1.3s ease;
-    opacity: 0;
+function launchConfetti() {
+    confetti({
+        particleCount: 120,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#ff69b4", "#ff1493", "#ffb6c1", "#ffffff", "#ff85c0"],
+        ticks: 300
+    });
+
+    setTimeout(function () {
+        confetti({
+            particleCount: 80,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            shapes: ["heart"],
+            colors: ["#ff69b4", "#ff1493"]
+        });
+        confetti({
+            particleCount: 80,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            shapes: ["heart"],
+            colors: ["#ff69b4", "#ff1493"]
+        });
+    }, 400);
 }
 
-.slide:not(.hidden) {
-    opacity: 1;
-    z-index: 10;
-}
+document.addEventListener("DOMContentLoaded", function () {
+    var yesBtn = document.getElementById("yesBtn");
+    var noBtn = document.getElementById("noBtn");
+    var responseText = document.getElementById("responseText");
 
-.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
+    if (!noBtn || !yesBtn) {
+        console.error("Кнопки не найдены");
+        return;
+    }
 
-.content {
-    text-align: center;
-    width: 100%;
-    max-width: 94%;
-    background: rgba(255, 182, 193, 0.38);
-    backdrop-filter: blur(10px);
-    padding: 24px 16px;
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.22);
-    overflow-wrap: break-word;
-    word-break: break-word;
-    hyphens: auto;
-}
+    var noHoverCount = 0;
+    var maxHovers = 8;
+    var lastEnterTime = 0;
+    var minInterval = 700;
 
-/* Заголовки */
-h1 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    font-size: clamp(2.4rem, 8vw, 4rem);
-    margin: 0 0 16px 0;
-    line-height: 1.15;
-    text-shadow: 0 4px 16px rgba(255, 20, 147, 0.7);
-}
+    noBtn.addEventListener("pointerenter", function (e) {
+        var now = Date.now();
+        if (now - lastEnterTime < minInterval) return;
 
-.subtitle {
-    font-size: clamp(1.45rem, 4.8vw, 2rem);
-    line-height: 1.4;
-    margin: 16px 0 28px;
-    padding: 0 8px;
-}
+        if (noHoverCount < maxHovers) {
+            var rect = noBtn.getBoundingClientRect();
+            var centerX = rect.left + rect.width / 2;
+            var centerY = rect.top + rect.height / 2;
 
-/* Кнопки */
-.buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
-}
+            var clientX = e.clientX;
+            var clientY = e.clientY;
 
-button, .next-btn {
-    font-size: clamp(1.6rem, 4.8vw, 2.1rem);
-    padding: 14px 44px;
-    min-width: 200px;
-    min-height: 54px;
-    border: none;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    touch-action: manipulation;
-}
+            var dx = centerX - clientX;
+            var dy = centerY - clientY;
 
-#yesBtn { background: linear-gradient(45deg, #ff69b4, #ff1493); color: white; }
-#noBtn { background: linear-gradient(45deg, #a0a0a0, #808080); color: white; position: relative; }
+            var len = Math.hypot(dx, dy) || 1;
+            var distance = 140 + Math.random() * 80;
 
-.next-btn { background: rgba(255,255,255,0.28); border: 2px solid rgba(255,255,255,0.55); }
+            dx = (dx / len) * distance;
+            dy = (dy / len) * distance;
 
-/* Последний слайд — строго без скролла */
-.joy {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-    padding: 16px 0;
-}
+            dx += (Math.random() - 0.5) * 30;
+            dy += (Math.random() - 0.5) * 30;
 
-.joy h1 {
-    font-size: clamp(2.2rem, 7vw, 3.8rem);
-    margin: 8px 0 16px 0;
-    line-height: 1.2;
-    width: 90%;
-    max-width: 700px;
-}
+            noBtn.style.transition = "transform 0.9s cubic-bezier(0.25, 0.8, 0.25, 1)";
+            noBtn.style.transform = "translate(" + dx + "px, " + dy + "px) scale(1.03)";
 
-.photos {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    width: 100%;
-    max-width: 90%;
-}
+            noHoverCount++;
+            lastEnterTime = now;
 
-.photos img {
-    width: 100%;
-    max-width: 280px;
-    border-radius: 14px;
-    border: 4px solid rgba(255,255,255,0.4);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.3);
-    object-fit: cover;
-}
+            if (noHoverCount >= maxHovers - 3) {
+                noBtn.classList.add("soft-pulse");
+            }
+        }
+    });
 
-.heart-emoji.beat {
-    font-size: clamp(2.2rem, 8vw, 3.4rem);
-    margin: 16px 0 12px 0;
-}
+    noBtn.addEventListener("pointerleave", function () {
+        noBtn.style.transition = "transform 0.75s ease-out";
+        noBtn.style.transform = "translate(0, 0) scale(1)";
+    });
 
-/* Падающие сердца */
-.hearts {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 0;
-    opacity: 0.92;
-}
+    noBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        nextSlide("slide-refuse");
+    });
 
-.hearts::before,
-.hearts::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 200%;
-    background-size: 70px;
-    animation: fall-bg 45s linear infinite;
-}
+    yesBtn.addEventListener("mouseenter", function (e) {
+        for (var i = 0; i < 6; i++) {
+            setTimeout(function () {
+                var heart = document.createElement("span");
+                heart.textContent = "💕";
+                heart.className = "yes-particle";
+                heart.style.left = e.clientX + "px";
+                heart.style.top = e.clientY + "px";
+                document.body.appendChild(heart);
 
-.hearts::before {
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="40" fill="rgba(255,105,180,0.55)">❤️</text></svg>') repeat;
-}
+                setTimeout(function () {
+                    heart.style.transform = "translate(" + (Math.random()*200-100) + "px, " + (Math.random()*-200-100) + "px) scale(0)";
+                    heart.style.opacity = "0";
+                }, 50);
 
-.hearts::after {
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="50" fill="rgba(255,182,193,0.45)">💕</text></svg>') repeat;
-    animation-direction: reverse;
-    animation-duration: 60s;
-    opacity: 0.7;
-}
+                setTimeout(function () { heart.remove(); }, 1200);
+            }, i * 80);
+        }
+    });
 
-@keyframes fall-bg {
-    0% { transform: translateY(-50%); }
-    100% { transform: translateY(100%); }
-}
+    yesBtn.addEventListener("click", function () {
+        showJoy("Урааа! Ты моя валентинка навсегда! 💖💖💖", true);
+    });
 
-@keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.25); }
-}
-
-@keyframes softPulse {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(0, -6px) scale(1.06); }
-}
-
-/* Медиа-запросы — строго подгонка под телефон */
-@media (max-width: 600px) {
-    .content { padding: 20px 14px; }
-    h1 { font-size: clamp(2.2rem, 9vw, 3.4rem); margin-bottom: 12px; }
-    .subtitle { font-size: clamp(1.35rem, 4.8vw, 1.85rem); margin: 12px 0 24px; }
-    button { font-size: 1.65rem; padding: 12px 36px; min-width: 170px; }
-    
-    .joy h1 { font-size: clamp(2rem, 8vw, 3.2rem); margin: 8px 0 12px 0; }
-    
-    .photos img { max-width: 78%; }
-    
-    .heart-emoji.beat { font-size: clamp(2rem, 9vw, 3rem); margin: 12px 0 8px 0; }
-}
-
-@media (max-height: 680px) {
-    .content { padding: 16px 12px; }
-    .joy { padding: 12px 0; gap: 12px; }
-    .photos img { max-width: 70%; }
-}
+    function showJoy(text, isYes) {
+        if (responseText) {
+            responseText.textContent = text;
+        }
+        nextSlide(3);
+        launchConfetti();
+        if (isYes) setTimeout(launchConfetti, 800);
+    }
+});
