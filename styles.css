@@ -21,7 +21,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 16px;
+    padding: 12px;
     transition: opacity 1.3s ease;
     opacity: 0;
 }
@@ -39,50 +39,53 @@ body {
 .content {
     text-align: center;
     width: 100%;
-    max-width: 92%;
+    max-width: 96%;
     background: rgba(255, 182, 193, 0.38);
     backdrop-filter: blur(10px);
-    padding: 44px 28px;
-    border-radius: 28px;
+    padding: 36px 20px;
+    border-radius: 24px;
     border: 1px solid rgba(255, 255, 255, 0.22);
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.22);
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
 }
 
 h1 {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
-    font-size: clamp(3.8rem, 12vw, 5.8rem);
-    margin-bottom: 24px;
-    letter-spacing: 2px;
+    font-size: clamp(2.9rem, 9.5vw, 4.8rem);
+    margin-bottom: 20px;
+    letter-spacing: 1.5px;
+    line-height: 1.1;
     text-shadow: 0 4px 16px rgba(255, 20, 147, 0.7);
 }
 
 .subtitle {
-    font-size: clamp(1.9rem, 6vw, 2.9rem);
-    line-height: 1.42;
-    margin: 32px 0 48px;
-    max-width: 100%;
-    text-shadow: 0 3px 12px rgba(0,0,0,0.5);
+    font-size: clamp(1.6rem, 5vw, 2.3rem);
+    line-height: 1.4;
+    margin: 24px 0 40px;
+    padding: 0 8px;
 }
 
 .buttons {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 28px;
-    margin-top: 20px;
+    gap: 24px;
 }
 
-button {
+button, .next-btn {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.9rem, 5.5vw, 2.4rem);
-    padding: 18px 54px;
+    font-size: clamp(1.7rem, 5vw, 2.2rem);
+    padding: 16px 48px;
+    min-width: 220px;
+    min-height: 58px;
     border: none;
     border-radius: 999px;
     cursor: pointer;
-    transition: all 0.4s ease;
+    transition: all 0.3s ease;
     box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    min-width: 220px;
     touch-action: manipulation;
 }
 
@@ -94,57 +97,74 @@ button {
 #noBtn {
     background: linear-gradient(45deg, #a0a0a0, #808080);
     color: white;
+    position: relative;
 }
 
-button:active {
-    transform: scale(0.96);
+button:hover {
+    transform: translateY(-6px) scale(1.08);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
 }
 
 .next-btn {
-    font-size: clamp(1.8rem, 5vw, 2.2rem);
-    padding: 16px 48px;
     background: rgba(255,255,255,0.28);
     color: white;
     border: 2px solid rgba(255,255,255,0.55);
-    min-width: 240px;
 }
 
 .photos {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 28px;
-    margin: 28px 0;
+    gap: 24px;
+    margin: 24px 0;
+    overflow-x: auto;
+    padding: 0 8px;
+    width: 100%;
 }
 
 .photos img {
-    max-width: 86%;
     width: 100%;
-    max-width: 340px;
-    border-radius: 20px;
-    border: 6px solid rgba(255,255,255,0.38);
-    box-shadow: 0 10px 28px rgba(0,0,0,0.28);
+    max-width: 320px;
+    border-radius: 16px;
+    border: 5px solid rgba(255,255,255,0.35);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    transition: transform 0.7s ease;
+}
+
+.photos img:hover {
+    transform: scale(1.08) rotate(3deg);
 }
 
 .joy h1 {
-    font-size: clamp(3.2rem, 10vw, 4.5rem);
-    margin-bottom: 24px;
+    font-size: clamp(2.6rem, 8vw, 4rem);
+    margin-bottom: 20px;
 }
 
 .heart-emoji {
-    font-size: clamp(3rem, 9vw, 4.2rem);
-    animation: heartbeat 2.4s infinite ease-in-out;
-}
-
-.beat {
-    animation: pulse 1.9s infinite;
+    font-size: clamp(2.8rem, 8vw, 3.8rem);
+    margin-top: 20px;
+    animation: heartbeat 2.2s infinite;
 }
 
 .soft-pulse {
-    animation: softPulse 2s infinite ease-in-out;
+    animation: softPulse 1.8s infinite ease-in-out;
 }
 
-/* Падающие сердца — легче для мобильных */
+.refuse-title {
+    font-size: clamp(2.8rem, 9vw, 4.4rem);
+    color: #ff3366;
+    text-shadow: 0 4px 16px rgba(255, 51, 102, 0.6);
+    line-height: 1.15;
+    margin-bottom: 20px;
+}
+
+.refuse-subtitle {
+    font-size: clamp(1.7rem, 5.5vw, 2.4rem);
+    color: #fffde7;
+    font-weight: 500;
+}
+
+/* Падающие сердечки */
 .hearts {
     position: fixed;
     inset: 0;
@@ -165,163 +185,61 @@ button:active {
 }
 
 .hearts::before {
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="40" fill="rgba(255,105,180,0.55)">❤️</text></svg>') repeat-x;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="40" fill="rgba(255,105,180,0.55)">❤️</text></svg>') repeat;
 }
 
 .hearts::after {
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="50" fill="rgba(255,182,193,0.45)">💕</text></svg>') repeat-x;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="50" fill="rgba(255,182,193,0.45)">💕</text></svg>') repeat;
     animation-direction: reverse;
     animation-duration: 55s;
     opacity: 0.7;
 }
 
 @keyframes fall-bg {
-    0%   { transform: translateY(-50%); }
+    0% { transform: translateY(-50%); }
     100% { transform: translateY(100%); }
 }
 
-/* Анимации */
 @keyframes heartbeat {
     0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.22); }
+    50% { transform: scale(1.25); }
 }
 
 @keyframes pulse {
     0%,100% { transform: scale(1); }
-    50%     { transform: scale(1.12); }
+    50% { transform: scale(1.15); }
 }
 
 @keyframes softPulse {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50%      { transform: translateY(-5px) scale(1.04); }
-}
-
-.slide:not(.hidden) .subtitle {
-    animation: fadeInUp 2s ease-out;
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(0, -6px) scale(1.06); }
 }
 
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* Медиа-запросы — основной оптимизатор для мобильных */
-@media (max-width: 640px) {
-    .content {
-        padding: 36px 24px;
-        border-radius: 24px;
-    }
-    
-    h1 {
-        font-size: clamp(3.2rem, 11vw, 4.8rem);
-    }
-    
-    .subtitle {
-        font-size: clamp(1.7rem, 5.5vw, 2.4rem);
-        margin: 28px 0 44px;
-    }
-    
-    button, .next-btn {
-        font-size: clamp(1.8rem, 5.2vw, 2.3rem);
-        padding: 16px 50px;
-        min-width: 240px;
-    }
-    
-    .buttons {
-        gap: 32px;
-    }
-    
-    .photos {
-        gap: 32px;
-    }
-    
-    .photos img {
-        max-width: 92%;
-        border-width: 5px;
-    }
-}
-
-@media (max-height: 680px) {
-    .content {
-        padding: 32px 24px;
-    }
-    
-    h1 {
-        margin-bottom: 16px;
-    }
-    
-    .subtitle {
-        margin: 24px 0 36px;
-    }
-}
-/* ... предыдущие стили остаются ... */
-
-.content {
-    width: 100%;
-    max-width: 94%;               /* было 92% → чуть шире, но безопасно */
-    padding: 44px 24px;           /* уменьшены боковые отступы для узких экранов */
-    overflow-wrap: break-word;    /* ломает длинные слова */
-    word-break: break-word;
-    hyphens: auto;
-}
-
-.subtitle, .refuse-subtitle {
-    font-size: clamp(1.8rem, 5.8vw, 2.8rem);
-    line-height: 1.44;
-    margin: 28px 0 40px;
-    padding: 0 12px;              /* внутренние отступы от краёв */
-}
-
-.refuse-title {
-    font-size: clamp(3rem, 10vw, 4.6rem);
-    color: #ff3366;
-    text-shadow: 0 4px 16px rgba(255, 51, 102, 0.6);
-    margin-bottom: 20px;
-}
-
-.refuse-subtitle {
-    color: #fff9;
-    font-weight: 500;
-}
-
-/* Кнопки крупнее на мобильных */
-button, .next-btn {
-    font-size: clamp(2rem, 6vw, 2.6rem);
-    padding: 18px 56px;
-    min-width: 260px;
-    min-height: 64px;             /* удобнее тыкать пальцем */
-}
-
-/* Touch-эффекты */
-button:active,
-.next-btn:active {
-    transform: scale(0.94);
-    transition: transform 0.12s;
-}
-
-/* Медиа для очень узких экранов */
+/* Responsive для мобильных */
 @media (max-width: 480px) {
-    .content {
-        padding: 36px 20px;
-        border-radius: 24px;
-    }
-    
-    h1 {
-        font-size: clamp(3.4rem, 12vw, 4.8rem);
-    }
-    
-    .subtitle, .refuse-subtitle {
-        font-size: clamp(1.7rem, 6vw, 2.4rem);
-        margin: 24px 0 36px;
-    }
-    
-    button, .next-btn {
-        padding: 16px 50px;
-        min-width: 240px;
-        min-height: 60px;
-    }
-    
-    .photos img {
-        max-width: 94%;
-    }
+    h1 { font-size: clamp(2.6rem, 10vw, 4rem); }
+    .subtitle { font-size: clamp(1.5rem, 5vw, 2rem); margin: 20px 0 32px; }
+    button { font-size: 1.8rem; padding: 14px 40px; }
+    .photos img { max-width: 280px; }
+    .content { padding: 32px 16px; }
+}
+
+@media (max-width: 600px) {
+    h1 { font-size: 4rem; }
+    .subtitle { font-size: 1.8rem; margin: 20px 0 40px; }
+    button { font-size: 1.9rem; padding: 14px 40px; }
+    .photos img { max-width: 200px; }
+}
+
+.yes-particle {
+    position: absolute;
+    pointer-events: none;
+    font-size: 24px;
+    opacity: 0;
+    transition: all 0.8s ease-out;
 }
