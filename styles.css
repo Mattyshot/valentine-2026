@@ -11,8 +11,6 @@ body {
     min-height: 100vh;
     overflow: hidden;
     position: relative;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 .slide {
@@ -40,11 +38,11 @@ body {
     text-align: center;
     width: 100%;
     max-width: 96%;
-    max-height: 92vh;                /* ← основной фикс: не выше экрана */
-    overflow-y: auto;                /* ← прокрутка текста, если не влезает */
+    max-height: 92vh;
+    overflow-y: auto;
     background: rgba(255, 182, 193, 0.38);
     backdrop-filter: blur(10px);
-    padding: 28px 16px;              /* уменьшены отступы для мобильных */
+    padding: 28px 16px;
     border-radius: 24px;
     border: 1px solid rgba(255, 255, 255, 0.22);
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.22);
@@ -58,9 +56,8 @@ h1 {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     font-size: clamp(2.6rem, 8.5vw, 4.2rem);
-    margin: 0 0 16px 0;              /* меньше отступов сверху */
+    margin: 0 0 16px 0;
     line-height: 1.1;
-    text-shadow: 0 4px 16px rgba(255, 20, 147, 0.7);
 }
 
 .subtitle {
@@ -96,7 +93,7 @@ button, .next-btn {
 
 .photos-container {
     width: 100%;
-    max-height: 45vh;                /* меньше высоты, чтобы текст сверху влез */
+    max-height: 45vh;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-behavior: smooth;
@@ -119,7 +116,6 @@ button, .next-btn {
     border-radius: 16px;
     border: 5px solid rgba(255,255,255,0.35);
     box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-    object-fit: cover;
 }
 
 .joy h1 {
@@ -145,7 +141,21 @@ button, .next-btn {
     color: #fffde7;
 }
 
-/* Падающие сердца и анимации (оставляем как было) */
+.soft-pulse {
+    animation: softPulse 1.8s infinite ease-in-out;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+}
+
+@keyframes softPulse {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(0, -6px) scale(1.06); }
+}
+
+/* Падающие сердца */
 .hearts {
     position: fixed;
     inset: 0;
@@ -181,42 +191,14 @@ button, .next-btn {
     100% { transform: translateY(100%); }
 }
 
-@keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.25); }
-}
-
-/* Медиа-запросы */
+/* Responsive */
 @media (max-width: 480px) {
-    .content {
-        padding: 24px 14px;
-    }
-    
-    h1 {
-        font-size: clamp(2.3rem, 9vw, 3.6rem);
-        margin-bottom: 12px;
-    }
-    
-    .subtitle {
-        font-size: clamp(1.4rem, 4.8vw, 1.9rem);
-        margin: 12px 0 28px;
-    }
-    
-    button, .next-btn {
-        font-size: 1.7rem;
-        padding: 12px 38px;
-        min-width: 180px;
-        min-height: 52px;
-    }
-    
-    .photos-container {
-        max-height: 40vh;
-    }
-    
-    .photos img {
-        max-width: 260px;
-        max-height: 38vh;
-    }
+    .content { padding: 24px 14px; }
+    h1 { font-size: clamp(2.3rem, 9vw, 3.6rem); margin-bottom: 12px; }
+    .subtitle { font-size: clamp(1.4rem, 4.8vw, 1.9rem); margin: 12px 0 28px; }
+    button { font-size: 1.7rem; padding: 12px 38px; min-width: 180px; }
+    .photos-container { max-height: 40vh; }
+    .photos img { max-width: 260px; max-height: 38vh; }
 }
 
 @media (min-width: 768px) {
