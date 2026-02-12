@@ -85,4 +85,103 @@
 
     @keyframes fall {
         from { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-        to { transform: translate
+        to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    img {
+        width: 220px;
+        height: auto;
+        border-radius: 20px;
+        margin-top: 20px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        animation: fadeIn 2s ease;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="slider" id="slider">
+
+    <!-- Слайд 1 -->
+    <div class="slide">
+        <h1>14 февраля уже близко…</h1>
+        <p>И у меня есть кое‑что важное для тебя</p>
+        <button class="yes" onclick="nextSlide()">Далее</button>
+    </div>
+
+    <!-- Слайд 2 -->
+    <div class="slide">
+        <h1>Будешь моей валентинкой?</h1>
+        <div>
+            <button class="yes" onclick="yes()">Да ❤️</button>
+            <button class="no" id="noBtn" onclick="no()">Нет 😈</button>
+        </div>
+    </div>
+
+    <!-- Слайд 3 — выбрала ДА -->
+    <div class="slide">
+        <h1>Я так и знал! ❤️</h1>
+        <p>Ты сделала меня самым счастливым человеком</p>
+        <img src="photo1.jpg" alt="Фото 1">
+        <img src="photo2.jpg" alt="Фото 2">
+    </div>
+
+    <!-- Слайд 4 — выбрала НЕТ -->
+    <div class="slide">
+        <h1>Ты думала, что у тебя есть выбор?</h1>
+        <p>Его нет 😎 Теперь ты моя валентинка!!!</p>
+        <img src="photo1.jpg" alt="Фото 1">
+        <img src="photo2.jpg" alt="Фото 2">
+    </div>
+
+</div>
+
+<script>
+let currentSlide = 0;
+let noHoverCount = 0;
+
+function nextSlide() {
+    currentSlide++;
+    document.getElementById("slider").style.transform =
+        `translateX(-${currentSlide * 100}vw)`;
+}
+
+function yes() {
+    currentSlide = 2;
+    document.getElementById("slider").style.transform =
+        `translateX(-${currentSlide * 100}vw)`;
+}
+
+function no() {
+    noHoverCount++;
+    if (noHoverCount < 8) {
+        // просто убегает
+    } else {
+        // после 8 попыток — переход на слайд 4
+        currentSlide = 3;
+        document.getElementById("slider").style.transform =
+            `translateX(-${currentSlide * 100}vw)`;
+    }
+}
+
+/* Падающие сердечки */
+setInterval(() => {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerText = ["❤️","💖","💘","💕","💗"][Math.floor(Math.random()*5)];
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (3 + Math.random()*4) + "s";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 7000);
+}, 300);
+</script>
+
+</body>
+</html>
