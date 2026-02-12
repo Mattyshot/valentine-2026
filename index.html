@@ -90,6 +90,8 @@
         cursor: pointer;
         margin: 8px;
         transition: 0.25s;
+        position: relative;
+        z-index: 10;
     }
 
     .yes {
@@ -107,13 +109,13 @@
         background: #444;
         color: white;
         position: absolute;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        z-index: 20;
     }
 
     .choice-wrapper {
         position: relative;
         width: 260px;
-        height: 120px;
+        height: 160px;
         margin: 0 auto;
     }
 
@@ -129,16 +131,6 @@
     @keyframes fall {
         from { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
         to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeInDown {
-        from { opacity: 0; transform: translateY(-30px); }
-        to { opacity: 1; transform: translateY(0); }
     }
 
     img {
@@ -183,39 +175,24 @@
         align-items: center;
         gap: 6px;
     }
-
-    .audio-hint {
-        position: fixed;
-        bottom: 16px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0,0,0,0.6);
-        color: #fff;
-        padding: 8px 16px;
-        border-radius: 999px;
-        font-size: 0.9rem;
-        z-index: 5;
-        animation: fadeIn 1s ease;
-    }
 </style>
 </head>
 
 <body>
 
+<!-- Музыка -->
 <audio id="bgMusic" loop>
-    <source src="music.mp3" type="audio/mpeg">
+    <source src="https://dl.muzonovs.ru/files/music/2023/11/tri-dnya-dozhdya-progulka.mp3" type="audio/mpeg">
 </audio>
 
 <button class="audio-btn" id="audioToggle">
     <span>🔊</span> Музыка
 </button>
-<div class="audio-hint" id="audioHint">
-    Нажми на экран, чтобы включить музыку 💗
-</div>
 
 <div class="scene">
     <div class="slider" id="slider">
 
+        <!-- Слайд 1 -->
         <div class="slide">
             <div class="slide-inner">
                 <h1>14 февраля уже близко…</h1>
@@ -224,17 +201,20 @@
             </div>
         </div>
 
+        <!-- Слайд 2 -->
         <div class="slide">
             <div class="slide-inner">
                 <h1>Будешь моей валентинкой?</h1>
                 <p>Отвечай честно… но судьба уже всё решила 😉</p>
+
                 <div class="choice-wrapper">
                     <button class="yes" onclick="yes()">Да ❤️</button>
-                    <button class="no" id="noBtn" onclick="no()">Нет 😈</button>
+                    <button class="no" id="noBtn">Нет 😈</button>
                 </div>
             </div>
         </div>
 
+        <!-- Слайд 3 -->
         <div class="slide">
             <div class="slide-inner">
                 <h1>Я так и знал! ❤️</h1>
@@ -245,6 +225,7 @@
             </div>
         </div>
 
+        <!-- Слайд 4 -->
         <div class="slide">
             <div class="slide-inner">
                 <h1>Ты думала, что у тебя есть выбор?</h1>
@@ -259,16 +240,13 @@
 
 <script>
 let currentSlide = 0;
-let noHoverCount = 0;
 const slider = document.getElementById("slider");
 const noBtn = document.getElementById("noBtn");
-const bgMusic = document.getElementById("bgMusic");
-const audioToggle = document.getElementById("audioToggle");
-const audioHint = document.getElementById("audioHint");
-let musicEnabled = false;
+let noCount = 0;
 
+/* Переходы */
 function updateSlide() {
-    slider.style.transform = `translateX(-${currentSlide * 100}vw) rotateY(${currentSlide * 6}deg)`;
+    slider.style.transform = `translateX(-${currentSlide * 100}vw)`;
 }
 
 function nextSlide() {
@@ -282,21 +260,10 @@ function yes() {
     launchConfettiBurst();
 }
 
-function no() {
-    noHoverCount++;
-    if (noHoverCount >= 8) {
-        currentSlide = 3;
-        updateSlide();
-        launchConfettiBurst();
-        setTimeout(() => {
-            alert("Ты правда думала, что у тебя есть выбор? 😏 Теперь ты моя валентинка!!!");
-        }, 600);
-    }
-}
-
+/* Убегающая кнопка */
 noBtn.addEventListener("mouseenter", () => {
-    noHoverCount++;
-    if (noHoverCount <= 8) {
+    noCount++;
+    if (noCount < 8) {
         const wrapper = document.querySelector(".choice-wrapper");
         const rect = wrapper.getBoundingClientRect();
         const maxX = rect.width - 120;
@@ -306,6 +273,13 @@ noBtn.addEventListener("mouseenter", () => {
     }
 });
 
+noBtn.addEventListener("click", () => {
+    currentSlide = 3;
+    updateSlide();
+    launchConfettiBurst();
+});
+
+/* Падающие сердечки */
 setInterval(() => {
     const heart = document.createElement("div");
     heart.classList.add("heart");
@@ -316,6 +290,7 @@ setInterval(() => {
     setTimeout(() => heart.remove(), 8000);
 }, 350);
 
+/* Конфетти */
 function createConfettiPiece() {
     const conf = document.createElement("div");
     conf.classList.add("confetti");
@@ -333,29 +308,20 @@ function launchConfettiBurst() {
     }
 }
 
-function tryPlayMusic() {
-    if (!musicEnabled) {
-        bgMusic.play().then(() => {
-            musicEnabled = true;
-            audioHint.style.display = "none";
-            audioToggle.innerHTML = '<span>🔊</span> Музыка вкл';
-        });
-    }
-}
-
-document.addEventListener("click", tryPlayMusic, { once: true });
+/* Музыка */
+const bgMusic = document.getElementById("bgMusic");
+const audioToggle = document.getElementById("audioToggle");
+let musicOn = false;
 
 audioToggle.addEventListener("click", () => {
-    if (!musicEnabled) {
-        tryPlayMusic();
+    if (!musicOn) {
+        bgMusic.play();
+        musicOn = true;
+        audioToggle.innerHTML = "<span>🔊</span> Музыка вкл";
     } else {
-        if (bgMusic.paused) {
-            bgMusic.play();
-            audioToggle.innerHTML = '<span>🔊</span> Музыка вкл';
-        } else {
-            bgMusic.pause();
-            audioToggle.innerHTML = '<span>🔈</span> Музыка выкл';
-        }
+        bgMusic.pause();
+        musicOn = false;
+        audioToggle.innerHTML = "<span>🔈</span> Музыка выкл";
     }
 });
 </script>
