@@ -1,166 +1,88 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Будешь моей валентинкой?</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Будешь моей валентинкой?</title>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        font-family: "Montserrat", sans-serif;
+        background: #ffdde1;
+    }
 
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-            overflow: hidden;
-            text-align: center;
-            color: #fff;
-        }
+    /* Контейнер всех слайдов */
+    .slider {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        transition: transform 0.8s ease-in-out;
+    }
 
-        h1 {
-            margin-top: 60px;
-            font-size: 2.4rem;
-            animation: fadeIn 2s ease;
-        }
+    .slide {
+        min-width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
 
-        .container {
-            margin-top: 40px;
-            animation: fadeInUp 2s ease;
-        }
+    h1 {
+        font-size: 2.4rem;
+        color: #d1005d;
+        margin-bottom: 20px;
+        animation: fadeIn 1.5s ease;
+    }
 
-        button {
-            padding: 15px 35px;
-            font-size: 1.3rem;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            margin: 15px;
-            transition: 0.3s;
-        }
+    p {
+        font-size: 1.4rem;
+        color: #333;
+        animation: fadeIn 2s ease;
+    }
 
-        #yesBtn {
-            background: #ff4f81;
-            color: white;
-            box-shadow: 0 0 15px rgba(255, 79, 129, 0.6);
-        }
+    button {
+        padding: 15px 35px;
+        font-size: 1.3rem;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        margin: 10px;
+        transition: 0.3s;
+    }
 
-        #noBtn {
-            background: #444;
-            color: white;
-            position: absolute;
-        }
+    .yes {
+        background: #ff4f8b;
+        color: white;
+    }
 
-        #result {
-            margin-top: 40px;
-            font-size: 1.8rem;
-            display: none;
-            animation: fadeIn 1s ease;
-        }
+    .no {
+        background: #444;
+        color: white;
+        position: relative;
+    }
 
-        .photos {
-            margin-top: 20px;
-            display: none;
-        }
+    /* Убегающая кнопка */
+    .no:hover {
+        position: absolute;
+        left: calc(50% - 100px + (Math.random() * 200px));
+        top: calc(50% - 50px + (Math.random() * 200px));
+    }
 
-        .photos img {
-            width: 180px;
-            height: auto;
-            border-radius: 15px;
-            margin: 10px;
-            box-shadow: 0 0 15px rgba(255,255,255,0.6);
-        }
+    /* Падающие сердечки */
+    .heart {
+        position: fixed;
+        top: -10px;
+        font-size: 24px;
+        animation: fall linear forwards;
+        pointer-events: none;
+    }
 
-        /* Falling emojis */
-        .emoji {
-            position: fixed;
-            top: -50px;
-            font-size: 30px;
-            animation: fall linear infinite;
-            opacity: 0.9;
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(110vh);
-                opacity: 0.2;
-            }
-        }
-
-        @keyframes fadeIn {
-            from {opacity: 0;}
-            to {opacity: 1;}
-        }
-
-        @keyframes fadeInUp {
-            from {opacity: 0; transform: translateY(20px);}
-            to {opacity: 1; transform: translateY(0);}
-        }
-    </style>
-</head>
-
-<body>
-
-    <h1>Будешь моей валентинкой? ❤️</h1>
-
-    <div class="container">
-        <button id="yesBtn">Да</button>
-        <button id="noBtn">Нет</button>
-    </div>
-
-    <div id="result"></div>
-
-    <div class="photos">
-        <!-- ЗАМЕНИ ЭТИ ДВЕ ФОТО НА СВОИ -->
-        <img src="photo1.jpg" alt="Фото 1">
-        <img src="photo2.jpg" alt="Фото 2">
-    </div>
-
-    <script>
-        const noBtn = document.getElementById("noBtn");
-        const yesBtn = document.getElementById("yesBtn");
-        const result = document.getElementById("result");
-        const photos = document.querySelector(".photos");
-
-        let dodgeCount = 0;
-
-        noBtn.addEventListener("mouseover", () => {
-            if (dodgeCount < 8) {
-                const x = Math.random() * (window.innerWidth - 150);
-                const y = Math.random() * (window.innerHeight - 150);
-                noBtn.style.left = x + "px";
-                noBtn.style.top = y + "px";
-                dodgeCount++;
-            }
-        });
-
-        noBtn.addEventListener("click", () => {
-            result.innerHTML = "Ты думала, что у тебя есть выбор? Его нет 😎<br>Теперь ты моя валентинка!!! ❤️";
-            result.style.display = "block";
-            photos.style.display = "block";
-        });
-
-        yesBtn.addEventListener("click", () => {
-            result.innerHTML = "Я знал, что ты скажешь ДА ❤️✨";
-            result.style.display = "block";
-            photos.style.display = "block";
-        });
-
-        // Falling emojis
-        const emojis = ["❤️", "💖", "💘", "💕", "💞", "💗"];
-        function createEmoji() {
-            const emoji = document.createElement("div");
-            emoji.classList.add("emoji");
-            emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-            emoji.style.left = Math.random() * 100 + "vw";
-            emoji.style.animationDuration = (3 + Math.random() * 5) + "s";
-            document.body.appendChild(emoji);
-
-            setTimeout(() => emoji.remove(), 8000);
-        }
-
-        setInterval(createEmoji, 300);
-    </script>
-
-</body>
-</html>
+    @keyframes fall {
+        from { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+        to { transform: translate
